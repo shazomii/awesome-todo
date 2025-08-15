@@ -4,7 +4,14 @@ import { renderAll, showProjectForm, showTodoForm } from './ui.js';
 import { createProject } from './project.js';
 import { createTodo } from './todo.js';
 
+function toggleSidebar() {
+    domElements.sidebar.classList.toggle('open');
+}
+
 export function initializeEventListeners() {
+    domElements.menuBtn.addEventListener('click', toggleSidebar);
+    domElements.closeSidebarBtn.addEventListener('click', toggleSidebar);
+
     domElements.addProjectBtn.addEventListener("click", () => showProjectForm(true));
 
     domElements.cancelAddProjectBtn.addEventListener("click", (e) => {
@@ -47,6 +54,9 @@ export function initializeEventListeners() {
             if (newActiveProject) {
                 appState.activeProject = newActiveProject;
                 renderAll(appState);
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
             }
         }
     });

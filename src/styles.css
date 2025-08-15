@@ -194,6 +194,26 @@ body {
     color: #333;
 }
 
+.menu-btn, .close-sidebar-btn {
+    display: none; /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-btn .material-icons, .close-sidebar-btn .material-icons {
+    font-size: 28px;
+    color: #333;
+}
+
+.main-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
 .app-container {
     display: flex;
     height: 100vh;
@@ -206,11 +226,19 @@ body {
     display: flex;
     flex-direction: column;
     border-right: 1px solid #f0f0f0;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px 20px 10px;
 }
 
 .sidebar h1 {
     font-size: 20px;
-    padding: 0 10px 20px 10px;
+    padding: 0;
 }
 
 .sidebar h2 {
@@ -227,7 +255,7 @@ body {
 #project-title {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 #project-list {
@@ -330,4 +358,29 @@ body {
 #cancel-add-project-btn {
     background-color: #ddd;
     color: #333;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        z-index: 1000;
+        transform: translateX(-100%);
+        background-color: #fafafa;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .menu-btn, .close-sidebar-btn {
+        display: block;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
 }

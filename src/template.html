@@ -10,7 +10,12 @@
 <body>
     <div class="app-container">
         <div class="sidebar">
-            <h1>Awesome Todo</h1>
+            <div class="sidebar-header">
+                <h1>Awesome Todo</h1>
+                <button id="close-sidebar-btn" class="close-sidebar-btn">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
             <h2>Projects</h2>
             <div id="project-list">
             </div>
@@ -25,7 +30,12 @@
         </div>
 
         <div class="main-content">
-            <h2 id="project-title"></h2>
+            <div class="main-header">
+                <button id="menu-btn" class="menu-btn">
+                    <span class="material-icons">menu</span>
+                </button>
+                <h2 id="project-title"></h2>
+            </div>
             <div id="todo-list-container">
             </div>
             <button id="show-add-todo-form-btn">+ Add Task</button>

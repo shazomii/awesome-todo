@@ -1,4 +1,9 @@
 export const domElements = {
+    // App structure
+    sidebar: document.querySelector(".sidebar"),
+    menuBtn: document.querySelector("#menu-btn"),
+    closeSidebarBtn: document.querySelector("#close-sidebar-btn"),
+
     // Project elements
     addProjectBtn: document.querySelector("#add-project-btn"),
     newProjectForm: document.querySelector(".new-project-form"),
