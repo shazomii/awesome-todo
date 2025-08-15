@@ -1,3 +1,5 @@
+import { domElements } from './dom.js';
+
 export const renderTodos = (project) => {
     const todoListContainer = document.querySelector("#todo-list-container");
     const projectTitle = document.querySelector("#project-title");
@@ -72,4 +74,30 @@ export const renderProjects = (projects, activeProject) => {
 
         projectList.appendChild(projectEl);
     })
+}
+
+export function renderAll(app) {
+    renderProjects(app.projects, app.activeProject);
+    if (app.activeProject) {
+        renderTodos(app.activeProject);
+    } else {
+        domElements.projectTitle.textContent = "No Projects";
+        domElements.todoListContainer.innerHTML = "";
+    }
+}
+
+export function showProjectForm(show) {
+    domElements.newProjectForm.style.display = show ? 'block' : 'none';
+    domElements.addProjectBtn.style.display = show ? 'none' : 'flex';
+    if (show) {
+        domElements.newProjectInput.focus();
+    }
+}
+
+export function showTodoForm(show) {
+    domElements.todoForm.style.display = show ? 'block' : 'none';
+    domElements.showAddTodoFormBtn.style.display = show ? 'none' : 'flex';
+    if (show) {
+        domElements.todoTitleInput.focus();
+    }
 }
