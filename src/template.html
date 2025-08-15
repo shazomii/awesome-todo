@@ -1,20 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Awesome To-Do</title>
 </head>
+
 <body>
-    <div class="header">
-        <h1>Awesome To-Do</h1>
-    </div>
-    <div class="main-content">
-        <div class="todo-form">
-            <input type="text" id="todo-title" placeholder="Enter a new task...">
-            <button id="add-todo-btn">Add Task</button>
+    <div class="app-container">
+        <div class="sidebar">
+            <h1>Awesome Todo</h1>
+            <h2>Projects</h2>
+            <div id="project-list">
+            </div>
+            <button id="add-project-btn" class="add-project-btn-styled">
+                <span class="material-icons">add</span>
+                Add project</button>
+            <div class="new-project-form" style="display: none;">
+                <input type="text" id="new-project-input" placeholder="New project name...">
+                <button id="confirm-add-project-btn">Add</button>
+                <button id="cancel-add-project-btn">Cancel</button>
+            </div>
         </div>
-        <div id="todo-list-container"></div>
+
+        <div class="main-content">
+            <h2 id="project-title"></h2>
+            <div id="todo-list-container">
+            </div>
+            <button id="show-add-todo-form-btn">+ Add Task</button>
+            <div class="todo-form" style="display: none;">
+                <input type="text" id="todo-title" placeholder="Task name" required>
+                <textarea id="todo-description" placeholder="Description"></textarea>
+                <div class="todo-form-row">
+                    <label for="todo-due-date">Due Date:</label>
+                    <input type="date" id="todo-due-date">
+                </div>
+                <div class="todo-form-row">
+                    <label for="todo-priority">Priority:</label>
+                    <select id="todo-priority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="todo-form-actions">
+                    <button id="add-todo-btn">Add Task</button>
+                    <button type="button" id="cancel-add-todo-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
+
 </html>
