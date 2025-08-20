@@ -61,6 +61,25 @@
             </div>
         </div>
     </div>
+    <div id="todo-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>New Task Details</h2>
+            <form id="todo-details-form">
+                <input type="text" id="modal-todo-title" placeholder="Task Title" required>
+                <textarea id="modal-todo-desc" placeholder="Description..."></textarea>
+                <label for="modal-todo-date">Due Date:</label>
+                <input type="date" id="modal-todo-date">
+                <label for="modal-todo-priority">Priority:</label>
+                <select id="modal-todo-priority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <button type="submit">Save Task</button>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>
