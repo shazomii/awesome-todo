@@ -1,6 +1,6 @@
-import { createProject } from './project.js';
-import { createTodo } from './todo.js';
-import { todo1, todo2 } from './default.js';
+import { cleanup1, cleanup2, cleanup3, garden1, garden2, garden3, garden4, launch1, launch2, launch3, launch4, wellness1, wellness2, wellness3 } from "./default";
+import { createProject } from "./project";
+import { createTodo } from "./todo";
 
 export const appState = {
     projects: [],
@@ -8,17 +8,35 @@ export const appState = {
 };
 
 export function saveState() {
-    localStorage.setItem("awesome-todo.projects", JSON.stringify(appState.projects));
+    localStorage.setItem("todoapp.projects", JSON.stringify(appState.projects));
 }
 
 export function loadState() {
-    const projectsJSON = localStorage.getItem("awesome-todo.projects");
+    const projectsJSON = localStorage.getItem("todoapp.projects");
     if (projectsJSON == null) {
-        const todayProject = createProject("Today");
-        const workProject = createProject("Work");
-        todayProject.addTodo(todo1);
-        workProject.addTodo(todo2);
-        appState.projects.push(todayProject, workProject);
+        const gardenProject = createProject("Garden");
+        const launchProject = createProject("Launch");
+        const wellnessProject = createProject("Wellness");
+        const cleanupProject = createProject("Cleanup");
+        gardenProject.addTodo(garden1);
+        gardenProject.addTodo(garden2);
+        gardenProject.addTodo(garden3);
+        gardenProject.addTodo(garden4);
+
+        launchProject.addTodo(launch1);
+        launchProject.addTodo(launch2);
+        launchProject.addTodo(launch3);
+        launchProject.addTodo(launch4);
+
+        wellnessProject.addTodo(wellness1);
+        wellnessProject.addTodo(wellness2);
+        wellnessProject.addTodo(wellness3);
+
+        cleanupProject.addTodo(cleanup1);
+        cleanupProject.addTodo(cleanup2);
+        cleanupProject.addTodo(cleanup3);
+
+        appState.projects.push(gardenProject, launchProject, wellnessProject, cleanupProject);
     } else {
         const projectsData = JSON.parse(projectsJSON);
         appState.projects = projectsData.map(projectData => {
@@ -31,9 +49,9 @@ export function loadState() {
                     todoData.dueDate,
                     todoData.priority
                 );
-                todo.id = todoData.id;
                 todo.complete = todoData.complete;
-                project.addTodo(todo);
+                todo.id = todoData.id;
+                project.addTodo(todo)
             });
             return project;
         });
