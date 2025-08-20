@@ -1,6 +1,6 @@
 import { domElements } from './dom.js';
 import { appState, saveState } from './state.js';
-import { renderAll, showProjectForm, showTodoForm } from './ui.js';
+import { closeModal, openModal, renderAll, showProjectForm } from './ui.js';
 import { createProject } from './project.js';
 import { createTodo } from './todo.js';
 
@@ -61,29 +61,40 @@ export function initializeEventListeners() {
         }
     });
 
-    domElements.showAddTodoFormBtn.addEventListener("click", () => showTodoForm(true));
-
-    domElements.cancelAddTodoBtn.addEventListener("click", () => showTodoForm(false));
-
-    domElements.addTodoBtn.addEventListener("click", () => {
-        const title = domElements.todoTitleInput.value.trim();
-        const description = domElements.todoDescriptionInput.value.trim();
-        const dueDate = domElements.todoDueDateInput.value;
-        const priority = domElements.todoPriorityInput.value;
-
-        if (title && appState.activeProject) {
-            const newTodo = createTodo(title, description, dueDate, priority);
-            appState.activeProject.addTodo(newTodo);
-            saveState();
-            renderAll(appState);
-            
-            domElements.todoTitleInput.value = "";
-            domElements.todoDescriptionInput.value = "";
-            domElements.todoDueDateInput.value = "";
-            domElements.todoPriorityInput.value = "low";
-            showTodoForm(false);
+    domElements.showAddTodoFormBtn.addEventListener("click", () => {
+        if (appState.activeProject) {
+            domElements.todoDetailsForm.reset();
+            openModal();
+        } else {
+            alert("Please select a project first!");
         }
     });
+
+    domElements.closeModalBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", (e) => {
+        if (e.target == domElements.todoModal) {
+            closeModal();
+        }
+    });
+
+    domElements.todoDetailsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const title = domElements.title.value.trim();
+    const description = domElements.description.value;
+    const dueDate = domElements.dueDate.value;
+    const priority = domElements.priority.value;
+
+    if (title && appState.activeProject) {
+        const newTodo = createTodo(title, description, dueDate, priority);
+        appState.activeProject.addTodo(newTodo);
+        
+        saveState();
+        renderAll(appState);
+        closeModal();
+    }
+});
 
     domElements.todoListContainer.addEventListener("click", (e) => {
         if (!appState.activeProject) return;

@@ -76,7 +76,7 @@ export const renderProjects = (projects, activeProject) => {
     })
 }
 
-export function renderAll(app) {
+export const renderAll = (app) => {
     renderProjects(app.projects, app.activeProject);
     if (app.activeProject) {
         renderTodos(app.activeProject);
@@ -86,7 +86,7 @@ export function renderAll(app) {
     }
 }
 
-export function showProjectForm(show) {
+export const showProjectForm = (show) => {
     domElements.newProjectForm.style.display = show ? 'block' : 'none';
     domElements.addProjectBtn.style.display = show ? 'none' : 'flex';
     if (show) {
@@ -94,10 +94,10 @@ export function showProjectForm(show) {
     }
 }
 
-export function showTodoForm(show) {
-    domElements.todoForm.style.display = show ? 'block' : 'none';
-    domElements.showAddTodoFormBtn.style.display = show ? 'none' : 'flex';
-    if (show) {
-        domElements.todoTitleInput.focus();
-    }
+export const openModal = () => {
+    domElements.todoModal.style.display = "block";
+    domElements.title.focus();
+}
+export const closeModal = () => {
+    domElements.todoModal.style.display = "none";
 }

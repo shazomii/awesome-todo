@@ -15,12 +15,12 @@ export const domElements = {
 
     // To-do elements
     showAddTodoFormBtn: document.querySelector("#show-add-todo-form-btn"),
-    todoForm: document.querySelector(".todo-form"),
-    addTodoBtn: document.querySelector("#add-todo-btn"),
-    cancelAddTodoBtn: document.querySelector("#cancel-add-todo-btn"),
-    todoTitleInput: document.querySelector("#todo-title"),
-    todoDescriptionInput: document.querySelector("#todo-description"),
-    todoDueDateInput: document.querySelector("#todo-due-date"),
-    todoPriorityInput: document.querySelector("#todo-priority"),
     todoListContainer: document.querySelector("#todo-list-container"),
+    todoModal: document.querySelector("#todo-modal"),
+    closeModalBtn: document.querySelector(".close-button"),
+    todoDetailsForm: document.querySelector("#todo-details-form"),
+    title: document.querySelector('#modal-todo-title'),
+    description: document.querySelector('#modal-todo-desc'),
+    dueDate: document.querySelector('#modal-todo-date'),
+    priority: document.querySelector('#modal-todo-priority'),
 };
