@@ -1,3 +1,4 @@
+import { parseISO, isValid, format, formatDistanceToNow } from 'date-fns';
 import { domElements } from './dom.js';
 
 export const renderTodos = (project) => {
@@ -36,9 +37,29 @@ export const renderTodos = (project) => {
 
         const todoDetails = document.createElement("div");
         todoDetails.classList.add("todo-details");
+
+        let formattedDate = "No due date";
+        if (todo.dueDate) {
+            try {
+                const dateOnlyMatch = /^\d{4}-\d{2}-\d{2}$/.test(todo.dueDate);
+                const parsed = parseISO(todo.dueDate);
+                if (isValid(parsed)) {
+                    if (dateOnlyMatch) {
+                        formattedDate = format(parsed, 'PP');
+                    } else {
+                        formattedDate = format(parsed, 'PPp');
+                    }
+                } else {
+                    formattedDate = todo.dueDate;
+                }
+            } catch (err) {
+                formattedDate = todo.dueDate;
+            }
+        }
+
         todoDetails.innerHTML = `
         <p>${todo.description}</p>
-        <p>${todo.dueDate}</p>
+        <p>${formattedDate}</p>
         <p>${todo.priority}</p>
         `;
 

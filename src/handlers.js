@@ -8,6 +8,14 @@ function toggleSidebar() {
     domElements.sidebar.classList.toggle('open');
 }
 
+function buildDueDateISO(dateStr, timeStr) {
+    if (!dateStr) return "";
+    if (timeStr) {
+        return `${dateStr}T${timeStr}`;
+    }
+    return dateStr;
+}
+
 export function initializeEventListeners() {
     domElements.menuBtn.addEventListener('click', toggleSidebar);
     domElements.closeSidebarBtn.addEventListener('click', toggleSidebar);
@@ -84,10 +92,12 @@ export function initializeEventListeners() {
     const title = domElements.title.value.trim();
     const description = domElements.description.value;
     const dueDate = domElements.dueDate.value;
+    const dueTime = domElements.dueTime.value;
+    const dueDateISO = buildDueDateISO(dueDate, dueTime);
     const priority = domElements.priority.value;
 
     if (title && appState.activeProject) {
-        const newTodo = createTodo(title, description, dueDate, priority);
+        const newTodo = createTodo(title, description, dueDateISO, priority);
         appState.activeProject.addTodo(newTodo);
         
         saveState();

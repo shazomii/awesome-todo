@@ -68,8 +68,12 @@
             <form id="todo-details-form">
                 <input type="text" id="modal-todo-title" placeholder="Task Title" required>
                 <textarea id="modal-todo-desc" placeholder="Description..."></textarea>
-                <label for="modal-todo-date">Due Date:</label>
-                <input type="date" id="modal-todo-date">
+                <div class="modal-form-row">
+                    <label for="modal-todo-date">Due Date:</label>
+                    <input type="date" id="modal-todo-date">
+                    <label for="modal-todo-time">Time:</label>
+                    <input type="time" id="modal-todo-time">
+                </div>
                 <label for="modal-todo-priority">Priority:</label>
                 <select id="modal-todo-priority">
                     <option value="low">Low</option>

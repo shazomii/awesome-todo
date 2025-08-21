@@ -22,5 +22,6 @@ export const domElements = {
     title: document.querySelector('#modal-todo-title'),
     description: document.querySelector('#modal-todo-desc'),
     dueDate: document.querySelector('#modal-todo-date'),
+    dueTime: document.querySelector('#modal-todo-time'),
     priority: document.querySelector('#modal-todo-priority'),
 };
