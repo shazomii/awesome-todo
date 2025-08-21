@@ -16,6 +16,44 @@ function buildDueDateISO(dateStr, timeStr) {
     return dateStr;
 }
 
+function handleProjectRename(event) {
+    const projectTitleEl = event.target;
+    const newName = projectTitleEl.textContent.trim();
+
+    if (!appState.activeProject) return;
+
+    if (!newName || newName === appState.activeProject.name) {
+        projectTitleEl.textContent = appState.activeProject.name;
+        return;
+    }
+
+    const isNameTaken = appState.projects.some(
+        p => p.id !== appState.activeProject.id && p.name === newName
+    );
+
+    if (isNameTaken) {
+        alert("A project with this name already exists.");
+        projectTitleEl.textContent = appState.activeProject.name;
+        return;
+    }
+
+    appState.activeProject.name = newName;
+    saveState();
+    renderAll(appState);
+}
+
+function handleProjectRenameKeydown(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        event.target.blur();
+    } else if (event.key === "Escape") {
+        if (appState.activeProject) {
+            event.target.textContent = appState.activeProject.name;
+        }
+        event.target.blur();
+    }
+}
+
 export function initializeEventListeners() {
     domElements.menuBtn.addEventListener('click', toggleSidebar);
     domElements.closeSidebarBtn.addEventListener('click', toggleSidebar);
@@ -68,6 +106,9 @@ export function initializeEventListeners() {
             }
         }
     });
+
+    domElements.projectTitle.addEventListener("blur", handleProjectRename);
+    domElements.projectTitle.addEventListener("keydown", handleProjectRenameKeydown);
 
     domElements.showAddTodoFormBtn.addEventListener("click", () => {
         if (appState.activeProject) {

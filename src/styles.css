@@ -269,6 +269,23 @@ body {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 0;
+    outline: 2px solid transparent;
+    border-radius: 4px;
+    padding: 0 4px;
+}
+
+#project-title.editable:hover {
+    background-color: #f0f0f0;
+    cursor: text;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #db4c3f;
+}
+
+#project-title.editable:focus {
+    background-color: white;
+    outline-color: #db4c3f;
+    text-decoration: none;
 }
 
 #project-list {

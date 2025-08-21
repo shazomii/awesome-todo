@@ -1,9 +1,9 @@
-import { parseISO, isValid, format, formatDistanceToNow } from 'date-fns';
+import { parseISO, isValid, format } from 'date-fns';
 import { domElements } from './dom.js';
 
 export const renderTodos = (project) => {
-    const todoListContainer = document.querySelector("#todo-list-container");
-    const projectTitle = document.querySelector("#project-title");
+    const todoListContainer = domElements.todoListContainer;
+    const projectTitle = domElements.projectTitle;
 
     projectTitle.textContent = project.name;
 
@@ -71,7 +71,7 @@ export const renderTodos = (project) => {
 };
 
 export const renderProjects = (projects, activeProject) => {
-    const projectList = document.querySelector("#project-list");
+    const projectList = domElements.projectListContainer;
     projectList.innerHTML = "";
 
     projects.forEach(project => {
@@ -100,9 +100,13 @@ export const renderProjects = (projects, activeProject) => {
 export const renderAll = (app) => {
     renderProjects(app.projects, app.activeProject);
     if (app.activeProject) {
+        domElements.projectTitle.classList.add("editable");
+        domElements.projectTitle.contentEditable = true;
         renderTodos(app.activeProject);
     } else {
         domElements.projectTitle.textContent = "No Projects";
+        domElements.projectTitle.classList.remove("editable");
+        domElements.projectTitle.contentEditable = false;
         domElements.todoListContainer.innerHTML = "";
     }
 }
