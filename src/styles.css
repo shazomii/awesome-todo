@@ -311,6 +311,7 @@ body {
     color: #888;
     cursor: pointer;
     font-weight: bold;
+    font-size: 20px;
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
 }

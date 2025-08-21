@@ -28,7 +28,7 @@ export const renderTodos = (project) => {
 
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-btn");
-        deleteBtn.textContent = "X";
+        deleteBtn.innerHTML = "&times;";
 
         todoSummary.appendChild(checkbox);
         todoSummary.appendChild(title);
@@ -63,7 +63,7 @@ export const renderProjects = (projects, activeProject) => {
 
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-project-btn");
-        deleteBtn.textContent = "X";
+        deleteBtn.innerHTML = "&times;";
 
         projectEl.appendChild(projectNameSpan);
         projectEl.appendChild(deleteBtn);
