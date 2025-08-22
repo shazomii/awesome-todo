@@ -128,24 +128,35 @@ export function initializeEventListeners() {
     });
 
     domElements.todoDetailsForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    const title = domElements.title.value.trim();
-    const description = domElements.description.value;
-    const dueDate = domElements.dueDate.value;
-    const dueTime = domElements.dueTime.value;
-    const dueDateISO = buildDueDateISO(dueDate, dueTime);
-    const priority = domElements.priority.value;
+        const title = domElements.title.value.trim();
+        const description = domElements.description.value;
+        const dueDate = domElements.dueDate.value;
+        const dueTime = domElements.dueTime.value;
+        const dueDateISO = buildDueDateISO(dueDate, dueTime);
+        const priority = domElements.priority.value;
+        const todoId = e.target.dataset.todoId;
 
-    if (title && appState.activeProject) {
-        const newTodo = createTodo(title, description, dueDateISO, priority);
-        appState.activeProject.addTodo(newTodo);
-        
-        saveState();
-        renderAll(appState);
-        closeModal();
-    }
-});
+        if (title && appState.activeProject) {
+            if (todoId) {
+                const todo = appState.activeProject.todos.find(t => t.id === todoId);
+                if (todo) {
+                    todo.title = title;
+                    todo.description = description;
+                    todo.dueDate = dueDateISO;
+                    todo.priority = priority;
+                }
+            } else {
+                const newTodo = createTodo(title, description, dueDateISO, priority);
+                appState.activeProject.addTodo(newTodo);
+            }
+
+            saveState();
+            renderAll(appState);
+            closeModal();
+        }
+    });
 
     domElements.todoListContainer.addEventListener("click", (e) => {
         if (!appState.activeProject) return;
@@ -161,6 +172,14 @@ export function initializeEventListeners() {
                 todo.complete = !todo.complete;
                 saveState();
                 renderAll(appState);
+            }
+            return;
+        }
+
+        if (target.closest(".edit-btn")) {
+            const todo = appState.activeProject.todos.find(t => t.id === todoId);
+            if (todo) {
+                openModal(todo);
             }
             return;
         }

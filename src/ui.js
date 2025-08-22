@@ -21,7 +21,7 @@ export const renderTodos = (project) => {
         checkbox.type = "checkbox";
         checkbox.checked = todo.complete;
 
-        const title = document.createElement("span");
+        const title = document.createElement("p");
         title.textContent = todo.title;
         if (todo.complete) {
             todoItem.classList.add("complete");
@@ -31,8 +31,13 @@ export const renderTodos = (project) => {
         deleteBtn.classList.add("delete-btn");
         deleteBtn.innerHTML = "&times;";
 
+        const editBtn = document.createElement("button");
+        editBtn.classList.add("edit-btn");
+        editBtn.innerHTML = '<span class="material-icons">edit</span>';
+
         todoSummary.appendChild(checkbox);
         todoSummary.appendChild(title);
+        todoSummary.appendChild(editBtn);
         todoSummary.appendChild(deleteBtn);
 
         const todoDetails = document.createElement("div");
@@ -119,9 +124,33 @@ export const showProjectForm = (show) => {
     }
 }
 
-export const openModal = () => {
+export const openModal = (todo = null) => {
+    const modalTitle = domElements.todoModal.querySelector("h2");
+    modalTitle.textContent = todo ? "Edit Task" : "New Task";
+
+    if (todo) {
+        domElements.title.value = todo.title;
+        domElements.description.value = todo.description || "";
+
+        if (todo.dueDate) {
+            const [date, time] = todo.dueDate.split("T");
+            domElements.dueDate.value = date;
+            domElements.dueTime.value = time || "";
+        } else {
+            domElements.dueDate.value = "";
+            domElements.dueTime.value = "";
+        }
+
+        domElements.priority.value = todo.priority;
+        domElements.todoDetailsForm.dataset.todoId = todo.id;
+    } else {
+        domElements.todoDetailsForm.reset();
+        delete domElements.todoDetailsForm.dataset.todoId;
+    }
     domElements.todoModal.style.display = "block";
     domElements.title.focus();
+
+
 }
 export const closeModal = () => {
     domElements.todoModal.style.display = "none";
