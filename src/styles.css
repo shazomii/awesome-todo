@@ -52,7 +52,7 @@ body {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
-    padding-left: 38px;
+    padding-left: 28px;
     font-size: 13px;
     color: #555;
 }
@@ -107,7 +107,6 @@ body {
     font-weight: bold;
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
-    /* padding: 0 4px; */
 }
 
 .edit-btn {
@@ -126,7 +125,7 @@ body {
     color: #db4c3f;
 }
 
-#show-add-todo-form-btn {
+#show-todo-modal-btn {
     background: none;
     border: none;
     color: #888;
@@ -138,7 +137,7 @@ body {
     margin-top: 10px;
 }
 
-#show-add-todo-form-btn:hover {
+#show-todo-modal-btn:hover {
     color: #db4c3f;
 }
 

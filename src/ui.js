@@ -46,14 +46,9 @@ export const renderTodos = (project) => {
         let formattedDate = "No due date";
         if (todo.dueDate) {
             try {
-                const dateOnlyMatch = /^\d{4}-\d{2}-\d{2}$/.test(todo.dueDate);
                 const parsed = parseISO(todo.dueDate);
                 if (isValid(parsed)) {
-                    if (dateOnlyMatch) {
-                        formattedDate = format(parsed, 'PP');
-                    } else {
-                        formattedDate = format(parsed, 'PPp');
-                    }
+                    formattedDate = format(parsed, 'PP, p');
                 } else {
                     formattedDate = todo.dueDate;
                 }
@@ -64,8 +59,8 @@ export const renderTodos = (project) => {
 
         todoDetails.innerHTML = `
         <p>${todo.description}</p>
-        <p>${formattedDate}</p>
-        <p>${todo.priority}</p>
+        <p><strong>Due:</strong> ${formattedDate}</p>
+        <p><strong>Priority:</strong> ${todo.priority}</p>
         `;
 
         todoItem.appendChild(todoSummary);
@@ -131,16 +126,7 @@ export const openModal = (todo = null) => {
     if (todo) {
         domElements.title.value = todo.title;
         domElements.description.value = todo.description || "";
-
-        if (todo.dueDate) {
-            const [date, time] = todo.dueDate.split("T");
-            domElements.dueDate.value = date;
-            domElements.dueTime.value = time || "";
-        } else {
-            domElements.dueDate.value = "";
-            domElements.dueTime.value = "";
-        }
-
+        domElements.datetime.value = todo.dueDate;
         domElements.priority.value = todo.priority;
         domElements.todoDetailsForm.dataset.todoId = todo.id;
     } else {
@@ -149,9 +135,8 @@ export const openModal = (todo = null) => {
     }
     domElements.todoModal.style.display = "block";
     domElements.title.focus();
-
-
 }
+
 export const closeModal = () => {
     domElements.todoModal.style.display = "none";
 }

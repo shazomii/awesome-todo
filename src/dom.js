@@ -14,14 +14,13 @@ export const domElements = {
     projectTitle: document.querySelector("#project-title"),
 
     // To-do elements
-    showAddTodoFormBtn: document.querySelector("#show-add-todo-form-btn"),
+    showTodoModalBtn: document.querySelector("#show-todo-modal-btn"),
     todoListContainer: document.querySelector("#todo-list-container"),
     todoModal: document.querySelector("#todo-modal"),
     closeModalBtn: document.querySelector(".close-button"),
     todoDetailsForm: document.querySelector("#todo-details-form"),
     title: document.querySelector('#modal-todo-title'),
     description: document.querySelector('#modal-todo-desc'),
-    dueDate: document.querySelector('#modal-todo-date'),
-    dueTime: document.querySelector('#modal-todo-time'),
+    datetime: document.querySelector('#modal-todo-datetime'),
     priority: document.querySelector('#modal-todo-priority'),
 };

@@ -38,27 +38,7 @@
             </div>
             <div id="todo-list-container">
             </div>
-            <button id="show-add-todo-form-btn">+ Add Task</button>
-            <div class="todo-form" style="display: none;">
-                <input type="text" id="todo-title" placeholder="Task name" required>
-                <textarea id="todo-description" placeholder="Description"></textarea>
-                <div class="todo-form-row">
-                    <label for="todo-due-date">Due Date:</label>
-                    <input type="date" id="todo-due-date">
-                </div>
-                <div class="todo-form-row">
-                    <label for="todo-priority">Priority:</label>
-                    <select id="todo-priority">
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                    </select>
-                </div>
-                <div class="todo-form-actions">
-                    <button id="add-todo-btn">Add Task</button>
-                    <button type="button" id="cancel-add-todo-btn">Cancel</button>
-                </div>
-            </div>
+            <button id="show-todo-modal-btn">+ Add Task</button>
         </div>
     </div>
     <div id="todo-modal" class="modal">
@@ -69,10 +49,8 @@
                 <input type="text" id="modal-todo-title" placeholder="Task Title" required>
                 <textarea id="modal-todo-desc" placeholder="Description..."></textarea>
                 <div class="modal-form-row">
-                    <label for="modal-todo-date">Due Date:</label>
-                    <input type="date" id="modal-todo-date">
-                    <label for="modal-todo-time">Time:</label>
-                    <input type="time" id="modal-todo-time">
+                    <label for="modal-todo-datetime">Due Date & Time:</label>
+                    <input type="datetime-local" id="modal-todo-datetime">
                 </div>
                 <label for="modal-todo-priority">Priority:</label>
                 <select id="modal-todo-priority">

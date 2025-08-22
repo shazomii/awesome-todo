@@ -8,14 +8,6 @@ function toggleSidebar() {
     domElements.sidebar.classList.toggle('open');
 }
 
-function buildDueDateISO(dateStr, timeStr) {
-    if (!dateStr) return "";
-    if (timeStr) {
-        return `${dateStr}T${timeStr}`;
-    }
-    return dateStr;
-}
-
 function handleProjectRename(event) {
     const projectTitleEl = event.target;
     const newName = projectTitleEl.textContent.trim();
@@ -110,7 +102,7 @@ export function initializeEventListeners() {
     domElements.projectTitle.addEventListener("blur", handleProjectRename);
     domElements.projectTitle.addEventListener("keydown", handleProjectRenameKeydown);
 
-    domElements.showAddTodoFormBtn.addEventListener("click", () => {
+    domElements.showTodoModalBtn.addEventListener("click", () => {
         if (appState.activeProject) {
             domElements.todoDetailsForm.reset();
             openModal();
@@ -132,9 +124,7 @@ export function initializeEventListeners() {
 
         const title = domElements.title.value.trim();
         const description = domElements.description.value;
-        const dueDate = domElements.dueDate.value;
-        const dueTime = domElements.dueTime.value;
-        const dueDateISO = buildDueDateISO(dueDate, dueTime);
+        const dueDate = domElements.datetime.value;
         const priority = domElements.priority.value;
         const todoId = e.target.dataset.todoId;
 
@@ -144,11 +134,11 @@ export function initializeEventListeners() {
                 if (todo) {
                     todo.title = title;
                     todo.description = description;
-                    todo.dueDate = dueDateISO;
+                    todo.dueDate = dueDate;
                     todo.priority = priority;
                 }
             } else {
-                const newTodo = createTodo(title, description, dueDateISO, priority);
+                const newTodo = createTodo(title, description, dueDate, priority);
                 appState.activeProject.addTodo(newTodo);
             }
 
