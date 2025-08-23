@@ -1,15 +1,12 @@
 import { parseISO, isValid, format } from 'date-fns';
 import { domElements } from './dom.js';
+import { getTodosByCategory } from './state.js';
 
-export const renderTodos = (project) => {
+export const renderTodos = (todos, isDefaultView = false) => {
     const todoListContainer = domElements.todoListContainer;
-    const projectTitle = domElements.projectTitle;
-
-    projectTitle.textContent = project.name;
-
     todoListContainer.innerHTML = "";
 
-    project.todos.forEach(todo => {
+    todos.forEach(todo => {
         const todoItem = document.createElement("div");
         todoItem.classList.add("todo-item");
         todoItem.dataset.todoId = todo.id;
@@ -35,7 +32,14 @@ export const renderTodos = (project) => {
         editBtn.classList.add("edit-btn");
         editBtn.innerHTML = '<span class="material-icons">edit</span>';
 
+        
         todoSummary.appendChild(checkbox);
+        if (isDefaultView) {
+            const projectBadge = document.createElement("span");
+            projectBadge.classList.add("project-badge");
+            projectBadge.textContent = todo.projectName;
+            todoSummary.appendChild(projectBadge);
+        }
         todoSummary.appendChild(title);
         todoSummary.appendChild(editBtn);
         todoSummary.appendChild(deleteBtn);
@@ -98,16 +102,33 @@ export const renderProjects = (projects, activeProject) => {
 }
 
 export const renderAll = (app) => {
+    document.querySelectorAll(".nav-item").forEach(item => {
+        item.classList.remove("active");
+        if (item.dataset.category === app.viewMode) {
+            item.classList.add("active");
+        }
+    });
+
     renderProjects(app.projects, app.activeProject);
-    if (app.activeProject) {
+
+    if (app.viewMode === "project" && app.activeProject) {
+        domElements.projectTitle.textContent = app.activeProject.name
         domElements.projectTitle.classList.add("editable");
         domElements.projectTitle.contentEditable = true;
-        renderTodos(app.activeProject);
+        domElements.showTodoModalBtn.style.display = "block";
+        renderTodos(app.activeProject.todos);
     } else {
-        domElements.projectTitle.textContent = "No Projects";
+        const categoryTitle = {
+            today: "Today",
+            scheduled: "Scheduled",
+            completed: "Completed"
+        }[app.viewMode];
+
+        domElements.projectTitle.textContent = categoryTitle;
         domElements.projectTitle.classList.remove("editable");
         domElements.projectTitle.contentEditable = false;
-        domElements.todoListContainer.innerHTML = "";
+        domElements.showTodoModalBtn.style.display = "none";
+        renderTodos(getTodosByCategory(app.viewMode), true);
     }
 }
 
@@ -119,9 +140,10 @@ export const showProjectForm = (show) => {
     }
 }
 
-export const openModal = (todo = null) => {
+export const openModal = (todo = null, projectId = null) => {
     const modalTitle = domElements.todoModal.querySelector("h2");
     modalTitle.textContent = todo ? "Edit Task" : "New Task";
+    delete domElements.todoDetailsForm.dataset.projectId;
 
     if (todo) {
         domElements.title.value = todo.title;
@@ -129,9 +151,13 @@ export const openModal = (todo = null) => {
         domElements.datetime.value = todo.dueDate;
         domElements.priority.value = todo.priority;
         domElements.todoDetailsForm.dataset.todoId = todo.id;
+        if (projectId) {
+            domElements.todoDetailsForm.dataset.projectId = projectId;
+        }
     } else {
         domElements.todoDetailsForm.reset();
         delete domElements.todoDetailsForm.dataset.todoId;
+        delete domElements.todoDetailsForm.dataset.projectId;
     }
     domElements.todoModal.style.display = "block";
     domElements.title.focus();

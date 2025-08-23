@@ -5,7 +5,34 @@ import { createTodo } from "./todo";
 export const appState = {
     projects: [],
     activeProject: null,
+    viewMode: "today",
 };
+
+export const getTodosByCategory = (category) => {
+    const allTodos = appState.projects.flatMap(project =>
+        project.todos.map(todo => ({ ...todo, projectName: project.name }))
+    );
+
+    switch (category) {
+        case 'today':
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            return allTodos.filter(todo => {
+                if (!todo.dueDate || todo.complete) return false;
+                const dueDate = new Date(todo.dueDate);
+                return dueDate >= today && dueDate < tomorrow;
+            });
+        case 'scheduled':
+            return allTodos.filter(todo => todo.dueDate && !todo.complete);
+        case 'completed':
+            return allTodos.filter(todo => todo.complete);
+        default:
+            return [];
+    }
+}
 
 export function saveState() {
     localStorage.setItem("todoapp.projects", JSON.stringify(appState.projects));

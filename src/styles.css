@@ -14,6 +14,52 @@ body {
     line-height: 1.5;
 }
 
+.default-categories {
+    margin-bottom: 20px;
+}
+
+.nav-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-item .material-icons {
+    font-size: 20px;
+}
+
+.nav-item:hover {
+    background-color: #eee;
+}
+
+.nav-item.active {
+    background-color: #eee;
+    color: #db4c3f;
+    font-weight: bold;
+}
+
+.projects-header {
+    font-size: 16px;
+    color: #555;
+    padding: 20px 10px 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.project-badge {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 8px;
+    background-color: #db4c3f;
+    border-radius: 3px;
+    margin: 0 8px 0 8px;
+    color: white;
+}
+
 .todo-item {
     display: flex;
     flex-direction: column;

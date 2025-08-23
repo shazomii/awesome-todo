@@ -16,6 +16,20 @@
                     <span class="material-icons">close</span>
                 </button>
             </div>
+            <div class="default-categories">
+                <div class="nav-item" data-category="today">
+                    <span class="material-icons">today</span>
+                    <span>Today</span>
+                </div>
+                <div class="nav-item" data-category="scheduled">
+                    <span class="material-icons">calendar_month</span>
+                    <span>Scheduled</span>
+                </div>
+                <div class="nav-item" data-category="completed">
+                    <span class="material-icons">task_alt</span>
+                    <span>Completed</span>
+                </div>
+            </div>
             <h2>Projects</h2>
             <div id="project-list">
             </div>
@@ -36,9 +50,9 @@
                 </button>
                 <h2 id="project-title"></h2>
             </div>
+            <button id="show-todo-modal-btn">+ Add Task</button>
             <div id="todo-list-container">
             </div>
-            <button id="show-todo-modal-btn">+ Add Task</button>
         </div>
     </div>
     <div id="todo-modal" class="modal">

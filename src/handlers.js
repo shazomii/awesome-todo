@@ -48,6 +48,7 @@ function handleProjectRenameKeydown(event) {
 
 export function initializeEventListeners() {
     domElements.menuBtn.addEventListener('click', toggleSidebar);
+
     domElements.closeSidebarBtn.addEventListener('click', toggleSidebar);
 
     domElements.addProjectBtn.addEventListener("click", () => showProjectForm(true));
@@ -91,6 +92,7 @@ export function initializeEventListeners() {
             const newActiveProject = appState.projects.find(p => p.id === projectId);
             if (newActiveProject) {
                 appState.activeProject = newActiveProject;
+                appState.viewMode = "project";
                 renderAll(appState);
                 if (window.innerWidth <= 768) {
                     toggleSidebar();
@@ -127,10 +129,16 @@ export function initializeEventListeners() {
         const dueDate = domElements.datetime.value;
         const priority = domElements.priority.value;
         const todoId = e.target.dataset.todoId;
+        const projectId = e.target.dataset.projectId;
 
-        if (title && appState.activeProject) {
+        let targetProject = appState.activeProject;
+        if (projectId) {
+            targetProject = appState.projects.find(p => p.id === projectId);
+        }
+
+        if (title && targetProject) {
             if (todoId) {
-                const todo = appState.activeProject.todos.find(t => t.id === todoId);
+                const todo = targetProject.todos.find(t => t.id === todoId);
                 if (todo) {
                     todo.title = title;
                     todo.description = description;
@@ -139,7 +147,7 @@ export function initializeEventListeners() {
                 }
             } else {
                 const newTodo = createTodo(title, description, dueDate, priority);
-                appState.activeProject.addTodo(newTodo);
+                targetProject.addTodo(newTodo);
             }
 
             saveState();
@@ -149,38 +157,69 @@ export function initializeEventListeners() {
     });
 
     domElements.todoListContainer.addEventListener("click", (e) => {
-        if (!appState.activeProject) return;
         const todoItem = e.target.closest(".todo-item");
         if (!todoItem) return;
 
         const todoId = todoItem.dataset.todoId;
         const target = e.target;
 
-        if (target.type === "checkbox") {
-            const todo = appState.activeProject.todos.find(t => t.id === todoId);
-            if (todo) {
-                todo.complete = !todo.complete;
-                saveState();
-                renderAll(appState);
+        let targetProject, targetTodo;
+
+        if (appState.viewMode === "project") {
+            targetProject = appState.activeProject;
+            if (targetProject) {
+                targetTodo = targetProject.todos.find(t => t.id === todoId);
             }
+        } else {
+            for (const project of appState.projects) {
+                const todo = project.todos.find(t => t.id === todoId);
+                if (todo) {
+                    targetProject = project;
+                    targetTodo = todo;
+                    break;
+                }
+            }
+        }
+
+        if (!targetProject || !targetTodo) return;
+
+        if (target.type === "checkbox") {
+            targetTodo.complete = !targetTodo.complete;
+            saveState();
+            renderAll(appState);
             return;
         }
 
         if (target.closest(".edit-btn")) {
-            const todo = appState.activeProject.todos.find(t => t.id === todoId);
-            if (todo) {
-                openModal(todo);
+            if (appState.viewMode === "project") {
+                openModal(targetTodo)
+            } else {
+                openModal(targetTodo, targetProject.id);
             }
             return;
         }
 
         if (target.classList.contains("delete-btn")) {
-            appState.activeProject.removeTodo(todoId);
+            targetProject.removeTodo(todoId);
             saveState();
             renderAll(appState);
             return;
         }
 
         todoItem.classList.toggle('expanded');
+    });
+
+    domElements.defaultCategoryList.addEventListener("click", (e) => {
+        const navItem = e.target.closest(".nav-item");
+        if (!navItem) return;
+
+        const category = navItem.dataset.category;
+        appState.viewMode = category;
+        appState.activeProject = null;
+        renderAll(appState);
+
+        if (window.innerWidth <= 768) {
+            toggleSidebar();
+        }
     });
 }

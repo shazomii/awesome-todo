@@ -3,6 +3,7 @@ export const domElements = {
     sidebar: document.querySelector(".sidebar"),
     menuBtn: document.querySelector("#menu-btn"),
     closeSidebarBtn: document.querySelector("#close-sidebar-btn"),
+    defaultCategoryList: document.querySelector(".default-categories"),
 
     // Project elements
     addProjectBtn: document.querySelector("#add-project-btn"),
