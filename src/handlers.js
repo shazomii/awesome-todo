@@ -73,6 +73,7 @@ export function initializeEventListeners() {
             appState.activeProject = newProject;
             domElements.newProjectInput.value = "";
             saveState();
+            appState.viewMode = "project";
             renderAll(appState);
             showProjectForm(false);
             showNotification(`Project "${projectName}" has been created`, "success");

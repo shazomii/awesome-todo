@@ -6,6 +6,25 @@ export const renderTodos = (todos, isDefaultView = false) => {
     const todoListContainer = domElements.todoListContainer;
     todoListContainer.innerHTML = "";
 
+    if (!todos || todos.length === 0) {
+        const emptyState = document.createElement("div");
+        emptyState.classList.add("empty-state");
+        
+        const icon = document.createElement("span");
+        icon.classList.add("material-icons");
+        icon.textContent = "task";
+        
+        const message = document.createElement("p");
+        message.textContent = isDefaultView 
+            ? "No tasks found." 
+            : "No tasks yet. Click the '+' button above to add one!";
+            
+        emptyState.appendChild(icon);
+        emptyState.appendChild(message);
+        todoListContainer.appendChild(emptyState);
+        return;
+    }
+
     todos.forEach(todo => {
         const todoItem = document.createElement("div");
         todoItem.classList.add("todo-item");
@@ -77,6 +96,23 @@ export const renderTodos = (todos, isDefaultView = false) => {
 export const renderProjects = (projects, activeProject) => {
     const projectList = domElements.projectListContainer;
     projectList.innerHTML = "";
+
+    if (!projects || projects.length === 0) {
+        const emptyState = document.createElement("div");
+        emptyState.classList.add("empty-state");
+        
+        const icon = document.createElement("span");
+        icon.classList.add("material-icons");
+        icon.textContent = "folder";
+        
+        const message = document.createElement("p");
+        message.textContent = "No projects yet. Create your first project!";
+            
+        emptyState.appendChild(icon);
+        emptyState.appendChild(message);
+        projectList.appendChild(emptyState);
+        return;
+    }
 
     projects.forEach(project => {
         const projectEl = document.createElement("div");
