@@ -32,7 +32,7 @@ export const renderTodos = (todos, isDefaultView = false) => {
         editBtn.classList.add("edit-btn");
         editBtn.innerHTML = '<span class="material-icons">edit</span>';
 
-        
+
         todoSummary.appendChild(checkbox);
         if (isDefaultView) {
             const projectBadge = document.createElement("span");

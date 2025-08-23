@@ -3,6 +3,8 @@ import { appState, saveState } from './state.js';
 import { closeModal, openModal, renderAll, showProjectForm } from './ui.js';
 import { createProject } from './project.js';
 import { createTodo } from './todo.js';
+import { showConfirmDialog } from './confirm.js';
+import { showNotification } from './notifications.js';
 
 function toggleSidebar() {
     domElements.sidebar.classList.toggle('open');
@@ -24,7 +26,7 @@ function handleProjectRename(event) {
     );
 
     if (isNameTaken) {
-        alert("A project with this name already exists.");
+        showNotification(`A project with this name already exists`, "error");
         projectTitleEl.textContent = appState.activeProject.name;
         return;
     }
@@ -61,7 +63,11 @@ export function initializeEventListeners() {
 
     domElements.confirmAddProjectBtn.addEventListener("click", () => {
         const projectName = domElements.newProjectInput.value.trim();
-        if (projectName && !appState.projects.find(p => p.name === projectName)) {
+        if (projectName) {
+            if (appState.projects.find(p => p.name === projectName)) {
+                showNotification(`Project "${projectName}" already exists`, "error");
+                return;
+            }
             const newProject = createProject(projectName);
             appState.projects.push(newProject);
             appState.activeProject = newProject;
@@ -69,24 +75,37 @@ export function initializeEventListeners() {
             saveState();
             renderAll(appState);
             showProjectForm(false);
+            showNotification(`Project "${projectName}" has been created`, "success");
         }
     });
 
-    domElements.projectListContainer.addEventListener("click", (e) => {
+    domElements.projectListContainer.addEventListener("click", async (e) => {
         const projectItem = e.target.closest(".project-item");
         if (!projectItem) return;
 
         const projectId = projectItem.dataset.projectId;
+        const project = appState.projects.find(p => p.id === projectId);
 
         if (e.target.matches(".delete-project-btn")) {
-            const projectIndex = appState.projects.findIndex(p => p.id === projectId);
-            if (projectIndex > -1) {
-                appState.projects.splice(projectIndex, 1);
-                if (appState.activeProject && appState.activeProject.id === projectId) {
-                    appState.activeProject = appState.projects[0] || null;
+            const todoCount = project.todos.length;
+            const title = "Delete Project";
+            const message = todoCount > 0
+                ? `Are you sure you want to delete "${project.name}" and its ${todoCount} task${todoCount === 1 ? '' : 's'}?`
+                : `Are you sure you want to delete "${project.name}"?`;
+
+            const confirmed = await showConfirmDialog(title, message);
+
+            if (confirmed) {
+                const projectIndex = appState.projects.findIndex(p => p.id === projectId);
+                if (projectIndex > -1) {
+                    appState.projects.splice(projectIndex, 1);
+                    if (appState.activeProject && appState.activeProject.id === projectId) {
+                        appState.activeProject = appState.projects[0] || null;
+                    }
+                    saveState();
+                    renderAll(appState);
+                    showNotification(`Project "${project.name}" has been deleted`, "warning");
                 }
-                saveState();
-                renderAll(appState);
             }
         } else {
             const newActiveProject = appState.projects.find(p => p.id === projectId);
@@ -105,12 +124,9 @@ export function initializeEventListeners() {
     domElements.projectTitle.addEventListener("keydown", handleProjectRenameKeydown);
 
     domElements.showTodoModalBtn.addEventListener("click", () => {
-        if (appState.activeProject) {
-            domElements.todoDetailsForm.reset();
-            openModal();
-        } else {
-            alert("Please select a project first!");
-        }
+        domElements.todoDetailsForm.reset();
+        openModal();
+
     });
 
     domElements.closeModalBtn.addEventListener("click", closeModal);
@@ -144,10 +160,12 @@ export function initializeEventListeners() {
                     todo.description = description;
                     todo.dueDate = dueDate;
                     todo.priority = priority;
+                    showNotification(`Task "${title}" has been updated`, "success");
                 }
             } else {
                 const newTodo = createTodo(title, description, dueDate, priority);
                 targetProject.addTodo(newTodo);
+                showNotification(`New task "${title}" has been created`, "success");
             }
 
             saveState();
@@ -156,7 +174,7 @@ export function initializeEventListeners() {
         }
     });
 
-    domElements.todoListContainer.addEventListener("click", (e) => {
+    domElements.todoListContainer.addEventListener("click", async (e) => {
         const todoItem = e.target.closest(".todo-item");
         if (!todoItem) return;
 
@@ -200,9 +218,17 @@ export function initializeEventListeners() {
         }
 
         if (target.classList.contains("delete-btn")) {
-            targetProject.removeTodo(todoId);
-            saveState();
-            renderAll(appState);
+            const title = "Delete Task";
+            const message = `Are you sure you want to delete "${targetTodo.title}"?`;
+
+            const confirmed = await showConfirmDialog(title, message);
+
+            if (confirmed) {
+                targetProject.removeTodo(todoId);
+                saveState();
+                renderAll(appState);
+                showNotification(`Task "${targetTodo.title}" has been deleted`);
+            }
             return;
         }
 
