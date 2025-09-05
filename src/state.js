@@ -85,3 +85,34 @@ export function loadState() {
     }
     appState.activeProject = appState.projects[0] || null;
 }
+
+export function resetToDefaults() {
+    const gardenProject = createProject("Garden");
+    const launchProject = createProject("Launch");
+    const wellnessProject = createProject("Wellness");
+    const cleanupProject = createProject("Cleanup");
+
+    gardenProject.addTodo(garden1);
+    gardenProject.addTodo(garden2);
+    gardenProject.addTodo(garden3);
+    gardenProject.addTodo(garden4);
+
+    launchProject.addTodo(launch1);
+    launchProject.addTodo(launch2);
+    launchProject.addTodo(launch3);
+    launchProject.addTodo(launch4);
+
+    wellnessProject.addTodo(wellness1);
+    wellnessProject.addTodo(wellness2);
+    wellnessProject.addTodo(wellness3);
+
+    cleanupProject.addTodo(cleanup1);
+    cleanupProject.addTodo(cleanup2);
+    cleanupProject.addTodo(cleanup3);
+
+    appState.projects = [gardenProject, launchProject, wellnessProject, cleanupProject];
+    appState.activeProject = gardenProject;
+    appState.viewMode = "project";
+
+    saveState();
+}

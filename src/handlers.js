@@ -1,5 +1,5 @@
 import { domElements } from './dom.js';
-import { appState, saveState } from './state.js';
+import { appState, saveState, resetToDefaults } from './state.js';
 import { closeModal, openModal, renderAll, showProjectForm } from './ui.js';
 import { createProject } from './project.js';
 import { createTodo } from './todo.js';
@@ -247,6 +247,20 @@ export function initializeEventListeners() {
 
         if (window.innerWidth <= 768) {
             toggleSidebar();
+        }
+    });
+
+    domElements.restoreDefaultsBtn.addEventListener("click", async () => {
+        const title = "Restore Demo";
+        const message = "This will delete all your current projects and tasks and restore the demo content. Are you sure?";
+        const action = "Restore";
+
+        const confirmed = await showConfirmDialog(title, message, action);
+        
+        if (confirmed) {
+            resetToDefaults();
+            renderAll(appState);
+            showNotification("Demo content has been restored", "success");
         }
     });
 }

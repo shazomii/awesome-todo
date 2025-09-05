@@ -4,10 +4,11 @@ const confirmMessage = document.querySelector('#confirm-modal-message');
 const confirmButton = document.querySelector('#confirm-modal-confirm');
 const cancelButton = document.querySelector('#confirm-modal-cancel');
 
-export function showConfirmDialog(title, message) {
+export function showConfirmDialog(title, message, action = "Delete") {
     return new Promise((resolve) => {
         confirmTitle.textContent = title;
         confirmMessage.textContent = message;
+        confirmButton.textContent = action;
         confirmModal.style.display = 'block';
 
         const handleConfirm = () => {

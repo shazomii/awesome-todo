@@ -4,6 +4,7 @@ export const domElements = {
     menuBtn: document.querySelector("#menu-btn"),
     closeSidebarBtn: document.querySelector("#close-sidebar-btn"),
     defaultCategoryList: document.querySelector(".default-categories"),
+    restoreDefaultsBtn: document.querySelector("#restore-defaults-btn"),
 
     // Project elements
     addProjectBtn: document.querySelector("#add-project-btn"),

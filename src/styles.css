@@ -327,16 +327,40 @@ body {
     color: #db4c3f;
 }
 
+.restore-defaults-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.restore-defaults-btn:hover {
+    background-color: #eee;
+    color: #db4c3f;
+}
+
+.restore-defaults-btn .material-icons {
+    font-size: 16px;
+}
+
 .sidebar-footer {
     padding: 16px 10px;
     color: #888;
     font-size: 12px;
-    text-align: center;
     border-top: 1px solid #f0f0f0;
-    margin-top: 10px;
+    margin-top: auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
     gap: 4px;
 }
 
