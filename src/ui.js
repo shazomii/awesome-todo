@@ -122,11 +122,21 @@ export const renderProjects = (projects, activeProject, viewMode) => {
         const projectNameSpan = document.createElement("span");
         projectNameSpan.textContent = project.name;
 
+        const incompleteTasks = project.todos.filter(todo => !todo.complete).length;
+        if (incompleteTasks > 0) {
+            const badgeSpan = document.createElement("span");
+            badgeSpan.classList.add("task-count");
+            badgeSpan.textContent = incompleteTasks;
+            projectEl.appendChild(projectNameSpan);
+            projectEl.appendChild(badgeSpan);
+        } else {
+            projectEl.appendChild(projectNameSpan);
+        }
+
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-project-btn");
         deleteBtn.innerHTML = "&times;";
 
-        projectEl.appendChild(projectNameSpan);
         projectEl.appendChild(deleteBtn);
 
         if (viewMode === "project" && activeProject && project.id === activeProject.id) {

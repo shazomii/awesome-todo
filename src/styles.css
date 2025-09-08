@@ -431,12 +431,16 @@ body {
     margin-bottom: 2px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
     font-weight: 500;
 }
 
-.project-item span {
+.project-item span:first-child {
     flex-grow: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    min-width: 0;
 }
 
 .project-item:hover {
@@ -453,7 +457,33 @@ body {
     font-weight: bold;
 }
 
+.task-count {
+    background-color: #ddd;
+    color: #555;
+    font-size: 10px;
+    font-weight: bold;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.project-item.active .task-count {
+    background-color: #db4c3f;
+    color: white;
+}
+
+.project-item:hover .task-count {
+    background-color: #db4c3f;
+    color: white;
+}
+
 .delete-project-btn {
+    flex-shrink: 0;
     background: none;
     border: none;
     color: #888;
