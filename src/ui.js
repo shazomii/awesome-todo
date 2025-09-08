@@ -1,6 +1,6 @@
 import { parseISO, isValid, format } from 'date-fns';
 import { domElements } from './dom.js';
-import { getTodosByCategory } from './state.js';
+import { getTodosByCategory, sortTodos } from './state.js';
 
 export const renderTodos = (todos, isDefaultView = false) => {
     const todoListContainer = domElements.todoListContainer;
@@ -25,7 +25,9 @@ export const renderTodos = (todos, isDefaultView = false) => {
         return;
     }
 
-    todos.forEach(todo => {
+    const sortedTodos = sortTodos(todos);
+
+    sortedTodos.forEach(todo => {
         const todoItem = document.createElement("div");
         todoItem.classList.add("todo-item");
         todoItem.dataset.todoId = todo.id;

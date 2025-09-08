@@ -60,6 +60,17 @@
                 </button>
                 <h2 id="project-title"></h2>
             </div>
+            <div class="sort-controls">
+                <label>Sort by:</label>
+                <select id="sort-select">
+                    <option value="dueDate">Due Date</option>
+                    <option value="priority">Priority</option>
+                    <option value="name">Name</option>
+                </select>
+                <button id="sort-direction-btn" class="sort-direction-btn">
+                    <span class="material-icons">arrow_upward</span>
+                </button>
+            </div>
             <button id="show-todo-modal-btn">+ Add Task</button>
             <div id="todo-list-container">
             </div>

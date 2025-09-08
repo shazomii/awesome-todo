@@ -6,7 +6,37 @@ export const appState = {
     projects: [],
     activeProject: null,
     viewMode: "today",
+    sortBy: "dueDate",
+    sortAsc: true,
 };
+
+export const sortTodos = (todos) => {
+    const priorityValues = { high: 0, medium: 1, low: 2 };
+
+    return [...todos].sort((a, b) => {
+        let comparison = 0;
+
+        switch (appState.sortBy) {
+            case "dueDate":
+                // Handle null dates
+                if (!a.dueDate && !b.dueDate) comparison = 0;
+                else if (!a.dueDate) comparison = 1;
+                else if (!b.dueDate) comparison = -1;
+                else comparison = new Date(a.dueDate) - new Date(b.dueDate);
+                break;
+
+            case "priority":
+                comparison = priorityValues[a.priority] - priorityValues[b.priority];
+                break;
+
+            case "name":
+                comparison = a.title.localeCompare(b.title);
+                break;
+        }
+
+        return appState.sortAsc ? comparison : -comparison;
+    });
+}
 
 export const getTodosByCategory = (category) => {
     const allTodos = appState.projects.flatMap(project =>
@@ -36,6 +66,10 @@ export const getTodosByCategory = (category) => {
 
 export function saveState() {
     localStorage.setItem("todoapp.projects", JSON.stringify(appState.projects));
+    localStorage.setItem("todoapp.sortPrefs", JSON.stringify({
+        sortBy: appState.sortBy,
+        sortAsc: appState.sortAsc
+    }));
 }
 
 export function loadState() {
@@ -84,9 +118,23 @@ export function loadState() {
         });
     }
     appState.activeProject = appState.projects[0] || null;
+
+    // Load sort preferences
+    const sortPrefs = JSON.parse(localStorage.getItem("todoapp.sortPrefs"));
+    if (sortPrefs) {
+        appState.sortBy = sortPrefs.sortBy;
+        appState.sortAsc = sortPrefs.sortAsc;
+        
+        // Update UI to match stored preferences
+        if (domElements.sortSelect) {
+            domElements.sortSelect.value = sortPrefs.sortBy;
+            domElements.sortDirectionBtn.querySelector('.material-icons').textContent = 
+                sortPrefs.sortAsc ? 'arrow_upward' : 'arrow_downward';
+        }
+    }
 }
 
-export function resetToDefaults() {
+export const resetToDefaults = () => {
     const gardenProject = createProject("Garden");
     const launchProject = createProject("Launch");
     const wellnessProject = createProject("Wellness");

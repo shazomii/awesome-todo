@@ -263,4 +263,16 @@ export function initializeEventListeners() {
             showNotification("Demo content has been restored", "success");
         }
     });
+
+    domElements.sortSelect.addEventListener("change", (e) => {
+        appState.sortBy = e.target.value;
+        renderAll(appState);
+    });
+
+    domElements.sortDirectionBtn.addEventListener("click", () => {
+        appState.sortAsc = !appState.sortAsc;
+        domElements.sortDirectionBtn.querySelector('.material-icons').textContent = 
+            appState.sortAsc ? 'arrow_upward' : 'arrow_downward';
+        renderAll(appState);
+    });
 }

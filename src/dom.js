@@ -25,4 +25,6 @@ export const domElements = {
     description: document.querySelector('#modal-todo-desc'),
     datetime: document.querySelector('#modal-todo-datetime'),
     priority: document.querySelector('#modal-todo-priority'),
+    sortSelect: document.querySelector("#sort-select"),
+    sortDirectionBtn: document.querySelector("#sort-direction-btn"),
 };
