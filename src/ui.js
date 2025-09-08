@@ -1,6 +1,6 @@
 import { parseISO, isValid, format } from 'date-fns';
 import { domElements } from './dom.js';
-import { getTodosByCategory, sortTodos } from './state.js';
+import { filterTodos, getTodosByCategory, sortTodos } from './state.js';
 
 export const renderTodos = (todos, isDefaultView = false) => {
     const todoListContainer = domElements.todoListContainer;
@@ -9,23 +9,42 @@ export const renderTodos = (todos, isDefaultView = false) => {
     if (!todos || todos.length === 0) {
         const emptyState = document.createElement("div");
         emptyState.classList.add("empty-state");
-        
+
         const icon = document.createElement("span");
         icon.classList.add("material-icons");
         icon.textContent = "task";
-        
+
         const message = document.createElement("p");
-        message.textContent = isDefaultView 
-            ? "No tasks found." 
+        message.textContent = isDefaultView
+            ? "No tasks found."
             : "No tasks yet. Click the '+' button above to add one!";
-            
+
         emptyState.appendChild(icon);
         emptyState.appendChild(message);
         todoListContainer.appendChild(emptyState);
         return;
     }
 
-    const sortedTodos = sortTodos(todos);
+    const filteredTodos = filterTodos(todos);
+
+    if (filteredTodos.length === 0) {
+        const emptyState = document.createElement("div");
+        emptyState.classList.add("empty-state");
+
+        const icon = document.createElement("span");
+        icon.classList.add("material-icons");
+        icon.textContent = "search_off";
+
+        const message = document.createElement("p");
+        message.textContent = "No tasks match your filters";
+
+        emptyState.appendChild(icon);
+        emptyState.appendChild(message);
+        todoListContainer.appendChild(emptyState);
+        return;
+    }
+
+    const sortedTodos = sortTodos(filteredTodos);
 
     sortedTodos.forEach(todo => {
         const todoItem = document.createElement("div");
@@ -102,14 +121,14 @@ export const renderProjects = (projects, activeProject, viewMode) => {
     if (!projects || projects.length === 0) {
         const emptyState = document.createElement("div");
         emptyState.classList.add("empty-state");
-        
+
         const icon = document.createElement("span");
         icon.classList.add("material-icons");
         icon.textContent = "folder";
-        
+
         const message = document.createElement("p");
         message.textContent = "No projects yet. Create your first project!";
-            
+
         emptyState.appendChild(icon);
         emptyState.appendChild(message);
         projectList.appendChild(emptyState);

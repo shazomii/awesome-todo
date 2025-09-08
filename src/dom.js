@@ -27,4 +27,7 @@ export const domElements = {
     priority: document.querySelector('#modal-todo-priority'),
     sortSelect: document.querySelector("#sort-select"),
     sortDirectionBtn: document.querySelector("#sort-direction-btn"),
+    taskFilter: document.querySelector("#task-filter"),
+    priorityFilter: document.querySelector("#priority-filter"),
+    resetFiltersBtn: document.querySelector("#reset-filters-btn"),
 };

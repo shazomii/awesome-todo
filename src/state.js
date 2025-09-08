@@ -1,4 +1,5 @@
 import { cleanup1, cleanup2, cleanup3, garden1, garden2, garden3, garden4, launch1, launch2, launch3, launch4, wellness1, wellness2, wellness3 } from "./default";
+import { domElements } from "./dom";
 import { createProject } from "./project";
 import { createTodo } from "./todo";
 
@@ -8,7 +9,24 @@ export const appState = {
     viewMode: "today",
     sortBy: "dueDate",
     sortAsc: true,
+    filters: {
+        searchTerm: "",
+        priority: "all"
+    }
 };
+
+export const filterTodos = (todos) => {
+    if (!todos) return [];
+
+    return todos.filter(todo => {
+        const matchesSearch = !appState.filters.searchTerm || todo.title.toLowerCase().includes(appState.filters.searchTerm.toLowerCase()) || (todo.description && todo.description.toLowerCase().includes(appState.filters.searchTerm.toLowerCase()));
+
+        const matchesPriority = appState.filters.priority === "all" || 
+            todo.priority === appState.filters.priority;
+
+        return matchesSearch && matchesPriority;
+    });
+}
 
 export const sortTodos = (todos) => {
     const priorityValues = { high: 0, medium: 1, low: 2 };
@@ -18,7 +36,6 @@ export const sortTodos = (todos) => {
 
         switch (appState.sortBy) {
             case "dueDate":
-                // Handle null dates
                 if (!a.dueDate && !b.dueDate) comparison = 0;
                 else if (!a.dueDate) comparison = 1;
                 else if (!b.dueDate) comparison = -1;
@@ -64,15 +81,16 @@ export const getTodosByCategory = (category) => {
     }
 }
 
-export function saveState() {
+export const saveState = () => {
     localStorage.setItem("todoapp.projects", JSON.stringify(appState.projects));
-    localStorage.setItem("todoapp.sortPrefs", JSON.stringify({
+    localStorage.setItem("todoapp.prefs", JSON.stringify({
         sortBy: appState.sortBy,
-        sortAsc: appState.sortAsc
+        sortAsc: appState.sortAsc,
+        filters: appState.filters
     }));
 }
 
-export function loadState() {
+export const loadState = () => {
     const projectsJSON = localStorage.getItem("todoapp.projects");
     if (projectsJSON == null) {
         const gardenProject = createProject("Garden");
@@ -119,17 +137,20 @@ export function loadState() {
     }
     appState.activeProject = appState.projects[0] || null;
 
-    // Load sort preferences
-    const sortPrefs = JSON.parse(localStorage.getItem("todoapp.sortPrefs"));
-    if (sortPrefs) {
-        appState.sortBy = sortPrefs.sortBy;
-        appState.sortAsc = sortPrefs.sortAsc;
-        
-        // Update UI to match stored preferences
+    const prefs = JSON.parse(localStorage.getItem("todoapp.prefs"));
+    if (prefs) {
+        appState.sortBy = prefs.sortBy;
+        appState.sortAsc = prefs.sortAsc;
+        appState.filters = prefs.filters || { searchTerm: "", priority: "all" };
+
         if (domElements.sortSelect) {
-            domElements.sortSelect.value = sortPrefs.sortBy;
-            domElements.sortDirectionBtn.querySelector('.material-icons').textContent = 
-                sortPrefs.sortAsc ? 'arrow_upward' : 'arrow_downward';
+            domElements.sortSelect.value = prefs.sortBy;
+            domElements.sortDirectionBtn.querySelector('.material-icons').textContent = prefs.sortAsc ? 'arrow_upward' : 'arrow_downward';
+        }
+
+        if (domElements.taskFilter) {
+            domElements.taskFilter.value = prefs.filters.searchTerm;
+            domElements.priorityFilter.value = prefs.filters.priority;
         }
     }
 }
@@ -163,4 +184,13 @@ export const resetToDefaults = () => {
     appState.viewMode = "project";
 
     saveState();
+}
+
+export function resetFilters() {
+    appState.filters = {
+        searchTerm: "",
+        priority: "all"
+    };
+    appState.sortBy = "dueDate";
+    appState.sortAsc = true;
 }

@@ -71,6 +71,24 @@
                     <span class="material-icons">arrow_upward</span>
                 </button>
             </div>
+            <div class="filter-controls">
+                <div class="search-box">
+                    <span class="material-icons">search</span>
+                    <input type="text" id="task-filter" placeholder="Search tasks...">
+                </div>
+                <div class="filter-options">
+                    <select id="priority-filter">
+                        <option value="all">All Priorities</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <button id="reset-filters-btn" class="reset-filters-btn">
+                    <span class="material-icons">restart_alt</span>
+                    Reset Filters
+                </button>
+            </div>
             <button id="show-todo-modal-btn">+ Add Task</button>
             <div id="todo-list-container">
             </div>

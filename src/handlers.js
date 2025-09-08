@@ -1,5 +1,5 @@
 import { domElements } from './dom.js';
-import { appState, saveState, resetToDefaults } from './state.js';
+import { appState, saveState, resetToDefaults, resetFilters } from './state.js';
 import { closeModal, openModal, renderAll, showProjectForm } from './ui.js';
 import { createProject } from './project.js';
 import { createTodo } from './todo.js';
@@ -48,7 +48,20 @@ function handleProjectRenameKeydown(event) {
     }
 }
 
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 export function initializeEventListeners() {
+
     domElements.menuBtn.addEventListener('click', toggleSidebar);
 
     domElements.closeSidebarBtn.addEventListener('click', toggleSidebar);
@@ -256,7 +269,7 @@ export function initializeEventListeners() {
         const action = "Restore";
 
         const confirmed = await showConfirmDialog(title, message, action);
-        
+
         if (confirmed) {
             resetToDefaults();
             renderAll(appState);
@@ -271,8 +284,33 @@ export function initializeEventListeners() {
 
     domElements.sortDirectionBtn.addEventListener("click", () => {
         appState.sortAsc = !appState.sortAsc;
-        domElements.sortDirectionBtn.querySelector('.material-icons').textContent = 
+        domElements.sortDirectionBtn.querySelector('.material-icons').textContent =
             appState.sortAsc ? 'arrow_upward' : 'arrow_downward';
+        renderAll(appState);
+    });
+
+
+    domElements.taskFilter.addEventListener("input", debounce((e) => {
+        appState.filters.searchTerm = e.target.value.trim();
+        saveState();
+        renderAll(appState);
+    }, 300));
+
+    domElements.priorityFilter.addEventListener("change", (e) => {
+        appState.filters.priority = e.target.value;
+        saveState();
+        renderAll(appState);
+    });
+
+    domElements.resetFiltersBtn.addEventListener("click", () => {
+        resetFilters();
+        
+        domElements.taskFilter.value = "";
+        domElements.priorityFilter.value = "all";
+        domElements.sortSelect.value = "dueDate";
+        domElements.sortDirectionBtn.querySelector('.material-icons').textContent = 'arrow_upward';
+        
+        saveState();
         renderAll(appState);
     });
 }
