@@ -93,7 +93,7 @@ export const renderTodos = (todos, isDefaultView = false) => {
     });
 };
 
-export const renderProjects = (projects, activeProject) => {
+export const renderProjects = (projects, activeProject, viewMode) => {
     const projectList = domElements.projectListContainer;
     projectList.innerHTML = "";
 
@@ -129,7 +129,7 @@ export const renderProjects = (projects, activeProject) => {
         projectEl.appendChild(projectNameSpan);
         projectEl.appendChild(deleteBtn);
 
-        if (activeProject && project.id === activeProject.id) {
+        if (viewMode === "project" && activeProject && project.id === activeProject.id) {
             projectEl.classList.add("active");
         }
 
@@ -145,7 +145,7 @@ export const renderAll = (app) => {
         }
     });
 
-    renderProjects(app.projects, app.activeProject);
+    renderProjects(app.projects, app.activeProject, app.viewMode);
 
     if (app.viewMode === "project" && app.activeProject) {
         domElements.projectTitle.textContent = app.activeProject.name
