@@ -93,6 +93,29 @@ export function initializeEventListeners() {
         }
     });
 
+    domElements.globalSearch.addEventListener("input", debounce((e) => {
+        const searchTerm = e.target.value.trim();
+        
+        if (searchTerm) {
+            appState.globalSearchTerm = searchTerm;
+            appState.viewMode = "search";
+            appState.activeProject = null;
+            renderAll(appState);
+        } else if (appState.viewMode === "search") {
+            appState.viewMode = "today";
+            appState.globalSearchTerm = "";
+            renderAll(appState);
+        }
+    }, 300));
+
+    domElements.globalSearch.addEventListener("focus", () => {
+        if (domElements.globalSearch.value.trim()) {
+            appState.viewMode = "search";
+            appState.globalSearchTerm = domElements.globalSearch.value.trim();
+            renderAll(appState);
+        }
+    });
+
     domElements.projectListContainer.addEventListener("click", async (e) => {
         const projectItem = e.target.closest(".project-item");
         if (!projectItem) return;

@@ -30,4 +30,6 @@ export const domElements = {
     taskFilter: document.querySelector("#task-filter"),
     priorityFilter: document.querySelector("#priority-filter"),
     resetFiltersBtn: document.querySelector("#reset-filters-btn"),
+    filterControls: document.querySelector(".filter-controls"),
+    globalSearch: document.querySelector("#global-search"),
 };

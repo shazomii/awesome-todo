@@ -1,6 +1,6 @@
 import { parseISO, isValid, format } from 'date-fns';
 import { domElements } from './dom.js';
-import { filterTodos, getTodosByCategory, sortTodos } from './state.js';
+import { filterTodos, getTodosByCategory, searchAllTodos, sortTodos } from './state.js';
 
 export const renderTodos = (todos, isDefaultView = false) => {
     const todoListContainer = domElements.todoListContainer;
@@ -178,12 +178,22 @@ export const renderAll = (app) => {
 
     renderProjects(app.projects, app.activeProject, app.viewMode);
 
+    domElements.filterControls.style.display = app.viewMode === "search" ? "none" : "flex";
+
     if (app.viewMode === "project" && app.activeProject) {
         domElements.projectTitle.textContent = app.activeProject.name
         domElements.projectTitle.classList.add("editable");
         domElements.projectTitle.contentEditable = true;
         domElements.showTodoModalBtn.style.display = "block";
         renderTodos(app.activeProject.todos);
+    }  else if (app.viewMode === "search") {
+        domElements.projectTitle.textContent = `Search Results for: "${app.globalSearchTerm}"`;
+        domElements.projectTitle.classList.remove("editable");
+        domElements.projectTitle.contentEditable = false;
+        domElements.showTodoModalBtn.style.display = "none";
+
+        const searchResults = searchAllTodos(app.globalSearchTerm || "");
+        renderTodos(searchResults, true);
     } else {
         const categoryTitle = {
             today: "Today",

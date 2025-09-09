@@ -14,6 +14,15 @@ body {
     line-height: 1.5;
 }
 
+.empty-state.search {
+    color: #888;
+}
+
+.empty-state.search .material-icons {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
 .default-categories {
     margin-bottom: 20px;
 }
@@ -325,6 +334,40 @@ body {
 
 .sidebar a {
     color: #db4c3f;
+}
+
+.search-container {
+    padding: 0 10px 16px 10px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.sidebar .search-box {
+    position: relative;
+    width: 100%;
+}
+
+.sidebar .search-box .material-icons {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 20px;
+}
+
+.sidebar .search-box input {
+    width: 100%;
+    padding: 8px 8px 8px 36px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.sidebar .search-box input:focus {
+    outline: none;
+    border-color: #db4c3f;
 }
 
 .restore-defaults-btn {

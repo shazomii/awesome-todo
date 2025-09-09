@@ -12,8 +12,28 @@ export const appState = {
     filters: {
         searchTerm: "",
         priority: "all"
-    }
+    },
+    globalSearchTerm: "",
 };
+
+export const searchAllTodos = (searchTerm) => {
+    if (!searchTerm) return [];
+
+    const searchResults = appState.projects.flatMap(project =>
+        project.todos
+            .filter(todo => {
+                const matchesTitle = todo.title.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesDescription = todo.description && todo.description.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesTitle || matchesDescription;
+            })
+            .map(todo => ({
+                ...todo,
+                projectName: project.name,
+                projectId: project.id
+            }))
+    );
+    return searchResults;
+}
 
 export const filterTodos = (todos) => {
     if (!todos) return [];
@@ -21,7 +41,7 @@ export const filterTodos = (todos) => {
     return todos.filter(todo => {
         const matchesSearch = !appState.filters.searchTerm || todo.title.toLowerCase().includes(appState.filters.searchTerm.toLowerCase()) || (todo.description && todo.description.toLowerCase().includes(appState.filters.searchTerm.toLowerCase()));
 
-        const matchesPriority = appState.filters.priority === "all" || 
+        const matchesPriority = appState.filters.priority === "all" ||
             todo.priority === appState.filters.priority;
 
         return matchesSearch && matchesPriority;
