@@ -14,15 +14,6 @@ body {
     line-height: 1.5;
 }
 
-.empty-state.search {
-    color: #888;
-}
-
-.empty-state.search .material-icons {
-    font-size: 48px;
-    margin-bottom: 16px;
-}
-
 .default-categories {
     margin-bottom: 20px;
 }
@@ -301,6 +292,7 @@ body {
 .app-container {
     display: flex;
     height: 100vh;
+    overflow: hidden;
 }
 
 .sidebar {
@@ -310,9 +302,11 @@ body {
     display: flex;
     flex-direction: column;
     border-right: 1px solid #f0f0f0;
-    transition: transform 0.3s ease-in-out;
     height: 100vh;
-    overflow: hidden;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
 }
 
 .sidebar-header {
@@ -413,9 +407,12 @@ body {
 }
 
 .main-content {
-    flex-grow: 1;
+    flex: 1;
     padding: 20px 40px;
     background-color: #fff;
+    height: 100vh;
+    margin-left: 280px;
+    overflow-y: auto;
 }
 
 #project-title {
@@ -698,6 +695,7 @@ body {
     padding: 40px 20px;
     text-align: center;
     color: #888;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .empty-state .material-icons {
@@ -720,10 +718,6 @@ body {
 #project-list .empty-state .material-icons {
     font-size: 32px;
     margin-bottom: 8px;
-}
-
-.empty-state {
-    animation: fadeIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
@@ -860,6 +854,7 @@ body {
         height: 100%;
         z-index: 1000;
         transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
         background-color: #fafafa;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     }
@@ -874,6 +869,8 @@ body {
     }
 
     .main-content {
+        margin-left: 0;
+        width: 100%;
         padding: 20px;
     }
 }
