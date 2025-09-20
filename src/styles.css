@@ -687,6 +687,48 @@ body {
     color: #ff9800;
 }
 
+.project-description {
+    color: #666;
+    font-size: 14px;
+    margin-top: 8px;
+    line-height: 1.5;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.project-description.editable:hover {
+    background-color: #f0f0f0;
+    cursor: text;
+}
+
+.project-description.editable:focus {
+    background-color: white;
+    outline: 2px solid #db4c3f;
+    outline-offset: -2px;
+}
+
+.project-description.empty {
+    font-style: italic;
+    color: #888;
+}
+
+.new-project-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.new-project-form .form-buttons {
+    display: flex;
+    gap: 8px;
+}
+
 .empty-state {
     display: flex;
     flex-direction: column;

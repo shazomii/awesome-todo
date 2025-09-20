@@ -181,15 +181,25 @@ export const renderAll = (app) => {
     domElements.filterControls.style.display = app.viewMode === "search" ? "none" : "flex";
 
     if (app.viewMode === "project" && app.activeProject) {
-        domElements.projectTitle.textContent = app.activeProject.name
         domElements.projectTitle.classList.add("editable");
         domElements.projectTitle.contentEditable = true;
+        domElements.projectTitle.textContent = app.activeProject.name
+
+        domElements.projectDescription.classList.add("editable");
+        domElements.projectDescription.contentEditable = true;
+        domElements.projectDescription.textContent = app.activeProject.description || "Add project description...";
+        if (!app.activeProject.description) {
+            domElements.projectDescription.classList.add("empty");
+        }
+
+        domElements.projectDescription.style.display = "block";
         domElements.showTodoModalBtn.style.display = "block";
         renderTodos(app.activeProject.todos);
-    }  else if (app.viewMode === "search") {
+    } else if (app.viewMode === "search") {
         domElements.projectTitle.textContent = `Search Results for: "${app.globalSearchTerm}"`;
         domElements.projectTitle.classList.remove("editable");
         domElements.projectTitle.contentEditable = false;
+        domElements.projectDescription.style.display = "none";
         domElements.showTodoModalBtn.style.display = "none";
 
         const searchResults = searchAllTodos(app.globalSearchTerm || "");
@@ -204,6 +214,7 @@ export const renderAll = (app) => {
         domElements.projectTitle.textContent = categoryTitle;
         domElements.projectTitle.classList.remove("editable");
         domElements.projectTitle.contentEditable = false;
+        domElements.projectDescription.style.display = "none";
         domElements.showTodoModalBtn.style.display = "none";
         renderTodos(getTodosByCategory(app.viewMode), true);
     }

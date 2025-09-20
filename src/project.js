@@ -1,4 +1,4 @@
-export const createProject = (name) => {
+export const createProject = (name, description = "") => {
     const todos = [];
 
     const addTodo = (todo) => {
@@ -14,6 +14,6 @@ export const createProject = (name) => {
 
     return {
         id: crypto.randomUUID(),
-        name, get todos() {return todos}, addTodo, removeTodo,
+        name, description, get todos() { return todos }, addTodo, removeTodo,
     };
 };

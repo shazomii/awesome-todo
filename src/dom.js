@@ -14,6 +14,8 @@ export const domElements = {
     cancelAddProjectBtn: document.querySelector("#cancel-add-project-btn"),
     projectListContainer: document.querySelector("#project-list"),
     projectTitle: document.querySelector("#project-title"),
+    newProjectDescription: document.querySelector("#new-project-description"),
+    projectDescription: document.querySelector("#project-description"),
 
     // To-do elements
     showTodoModalBtn: document.querySelector("#show-todo-modal-btn"),

@@ -62,6 +62,36 @@ function debounce(func, wait) {
 
 export function initializeEventListeners() {
 
+    domElements.projectDescription.addEventListener('click', (e) => {
+        if (e.target.classList.contains('empty')) {
+            e.target.textContent = '';
+            e.target.classList.remove('empty');
+        }
+    });
+
+    domElements.projectDescription.addEventListener('blur', (e) => {
+        const newDescription = e.target.textContent.trim();
+
+        if (appState.activeProject) {
+            if (!newDescription) {
+                e.target.textContent = 'Add project description...';
+                e.target.classList.add('empty');
+                appState.activeProject.description = '';
+            } else {
+                appState.activeProject.description = newDescription;
+                e.target.classList.remove('empty');
+            }
+            saveState();
+        }
+    }, true);
+
+    domElements.projectDescription.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            e.target.blur();
+        }
+    });
+
     domElements.menuBtn.addEventListener('click', toggleSidebar);
 
     domElements.closeSidebarBtn.addEventListener('click', toggleSidebar);
@@ -76,15 +106,20 @@ export function initializeEventListeners() {
 
     domElements.confirmAddProjectBtn.addEventListener("click", () => {
         const projectName = domElements.newProjectInput.value.trim();
+        const projectDescription = domElements.newProjectDescription.value.trim();
+
         if (projectName) {
             if (appState.projects.find(p => p.name === projectName)) {
                 showNotification(`Project "${projectName}" already exists`, "error");
                 return;
             }
-            const newProject = createProject(projectName);
+            const newProject = createProject(projectName, projectDescription);
             appState.projects.push(newProject);
             appState.activeProject = newProject;
+
             domElements.newProjectInput.value = "";
+            domElements.newProjectDescription.value = "";
+
             saveState();
             appState.viewMode = "project";
             renderAll(appState);
@@ -95,7 +130,7 @@ export function initializeEventListeners() {
 
     domElements.globalSearch.addEventListener("input", debounce((e) => {
         const searchTerm = e.target.value.trim();
-        
+
         if (searchTerm) {
             appState.globalSearchTerm = searchTerm;
             appState.viewMode = "search";
@@ -327,12 +362,12 @@ export function initializeEventListeners() {
 
     domElements.resetFiltersBtn.addEventListener("click", () => {
         resetFilters();
-        
+
         domElements.taskFilter.value = "";
         domElements.priorityFilter.value = "all";
         domElements.sortSelect.value = "dueDate";
         domElements.sortDirectionBtn.querySelector('.material-icons').textContent = 'arrow_upward';
-        
+
         saveState();
         renderAll(appState);
     });
