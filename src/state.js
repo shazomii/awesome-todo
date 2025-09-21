@@ -80,6 +80,8 @@ export const getTodosByCategory = (category) => {
         project.todos.map(todo => ({ ...todo, projectName: project.name }))
     );
 
+    const now = new Date();
+
     switch (category) {
         case 'today':
             const today = new Date();
@@ -93,7 +95,17 @@ export const getTodosByCategory = (category) => {
                 return dueDate >= today && dueDate < tomorrow;
             });
         case 'scheduled':
-            return allTodos.filter(todo => todo.dueDate && !todo.complete);
+            return allTodos.filter(todo => {
+               if (!todo.dueDate || todo.complete) return false;
+               const dueDate = new Date(todo.dueDate);
+               return dueDate >= now;
+            });
+        case 'overdue':
+            return allTodos.filter(todo => {
+                if (!todo.dueDate || todo.complete) return false;
+                const dueDate = new Date(todo.dueDate);
+                return dueDate < now;
+            })
         case 'completed':
             return allTodos.filter(todo => todo.complete);
         default:

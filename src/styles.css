@@ -94,6 +94,15 @@ body {
     color: #aaa;
 }
 
+.todo-item.overdue .todo-summary p {
+    color: #db4c3f;
+    font-weight: bold;
+}
+
+.todo-item.overdue .todo-details {
+    color: #db4c3f;
+}
+
 .todo-details {
     max-height: 0;
     overflow: hidden;

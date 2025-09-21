@@ -51,6 +51,11 @@ export const renderTodos = (todos, isDefaultView = false) => {
         todoItem.classList.add("todo-item");
         todoItem.dataset.todoId = todo.id;
 
+        const now = new Date();
+        if (todo.dueDate && new Date(todo.dueDate) < now && !todo.complete) {
+            todoItem.classList.add("overdue");
+        }
+
         const todoSummary = document.createElement("div");
         todoSummary.classList.add("todo-summary");
 
@@ -208,6 +213,7 @@ export const renderAll = (app) => {
         const categoryTitle = {
             today: "Today",
             scheduled: "Scheduled",
+            overdue: "Overdue",
             completed: "Completed"
         }[app.viewMode];
 
