@@ -184,9 +184,13 @@ export function initializeEventListeners() {
             if (newActiveProject) {
                 appState.activeProject = newActiveProject;
                 appState.viewMode = "project";
-                renderAll(appState);
                 if (window.innerWidth <= 768) {
                     toggleSidebar();
+                    setTimeout(() => {
+                        renderAll(appState);
+                    }, 50);
+                } else {
+                    renderAll(appState);
                 }
             }
         }
