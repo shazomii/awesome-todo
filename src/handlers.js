@@ -1,6 +1,6 @@
 import { domElements } from './dom.js';
 import { appState, saveState, resetToDefaults, resetFilters } from './state.js';
-import { closeModal, openModal, renderAll, showProjectForm } from './ui.js';
+import { closeModal, openModal, renderAll, renderModalTags, showProjectForm } from './ui.js';
 import { createProject } from './project.js';
 import { createTodo } from './todo.js';
 import { showConfirmDialog } from './confirm.js';
@@ -223,6 +223,8 @@ export function initializeEventListeners() {
         const todoId = e.target.dataset.todoId;
         const projectId = e.target.dataset.projectId;
 
+        const tags = Array.from(document.querySelectorAll("#modal-tag-container .tag-item")).map(tagEl => tagEl.dataset.tag);
+
         let targetProject = appState.activeProject;
         if (projectId) {
             targetProject = appState.projects.find(p => p.id === projectId);
@@ -236,10 +238,12 @@ export function initializeEventListeners() {
                     todo.description = description;
                     todo.dueDate = dueDate;
                     todo.priority = priority;
+                    todo.tags = tags;
                     showNotification(`Task "${title}" has been updated`, "success");
                 }
             } else {
                 const newTodo = createTodo(title, description, dueDate, priority);
+                newTodo.tags = tags;
                 targetProject.addTodo(newTodo);
                 showNotification(`New task "${title}" has been created`, "success");
             }
@@ -375,4 +379,26 @@ export function initializeEventListeners() {
         saveState();
         renderAll(appState);
     });
+
+    domElements.tagInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const newTag = domElements.tagInput.value.trim();
+            if (newTag) {
+                const currentTags = Array.from(domElements.tagContainer.querySelectorAll(".tag-item")).map(el => el.dataset.tag);
+                if (!currentTags.includes(newTag)) {
+                    renderModalTags([...currentTags, newTag]);
+                }
+                domElements.tagInput.value = "";
+            }
+        }
+    });
+
+    domElements.tagContainer.addEventListener("click", (e) => {
+        if (e.target.classList.contains("tag-delete-btn")) {
+            e.target.closest(".tag-item").remove();
+        } else {
+            domElements.tagInput.focus();
+        }
+    })
 }

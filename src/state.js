@@ -162,6 +162,7 @@ export const loadState = () => {
                 );
                 todo.complete = todoData.complete;
                 todo.id = todoData.id;
+                todo.tags = todoData.tags || [];
                 project.addTodo(todo)
             });
             return project;

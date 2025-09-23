@@ -112,6 +112,18 @@ export const renderTodos = (todos, isDefaultView = false) => {
         <p><strong>Priority:</strong> ${todo.priority}</p>
         `;
 
+        if (todo.tags && todo.tags.length > 0) {
+            const tagsContainer = document.createElement('div');
+            tagsContainer.classList.add('task-tags-display');
+            todo.tags.forEach(tag => {
+                const tagEl = document.createElement('span');
+                tagEl.classList.add('tag-item');
+                tagEl.textContent = tag;
+                tagsContainer.appendChild(tagEl);
+            });
+            todoDetails.appendChild(tagsContainer);
+        }
+
         todoItem.appendChild(todoSummary);
         todoItem.appendChild(todoDetails);
 
@@ -253,8 +265,29 @@ export const openModal = (todo = null, projectId = null) => {
         delete domElements.todoDetailsForm.dataset.todoId;
         delete domElements.todoDetailsForm.dataset.projectId;
     }
+
+    renderModalTags(todo ? todo.tags : []);
     domElements.todoModal.style.display = "block";
     domElements.title.focus();
+}
+
+export const renderModalTags = (tags = []) => {
+    const container = document.querySelector("#modal-tag-container");
+    container.innerHTML = "";
+    tags.forEach(tag => {
+        const tagEl = document.createElement("span");
+        tagEl.classList.add("tag-item");
+        tagEl.dataset.tag = tag;
+        tagEl.textContent = tag;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.classList.add("tag-delete-btn");
+        deleteBtn.innerHTML = "&times;";
+        tagEl.appendChild(deleteBtn);
+
+        container.appendChild(tagEl)
+    });
 }
 
 export const closeModal = () => {

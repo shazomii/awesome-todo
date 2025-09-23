@@ -27,6 +27,8 @@ export const domElements = {
     description: document.querySelector('#modal-todo-desc'),
     datetime: document.querySelector('#modal-todo-datetime'),
     priority: document.querySelector('#modal-todo-priority'),
+    tagInput: document.querySelector("#modal-todo-tags"),
+    tagContainer: document.querySelector("#modal-tag-container"),
     sortSelect: document.querySelector("#sort-select"),
     sortDirectionBtn: document.querySelector("#sort-direction-btn"),
     taskFilter: document.querySelector("#task-filter"),

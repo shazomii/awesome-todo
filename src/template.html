@@ -118,15 +118,20 @@
                     <input type="text" id="modal-todo-title" placeholder="Task Title" required>
                     <textarea id="modal-todo-desc" placeholder="Description..."></textarea>
                     <div class="modal-form-row">
-                        <label for="modal-todo-datetime">Due Date & Time:</label>
+                        <label for="modal-todo-datetime">Due Date & Time</label>
                         <input type="datetime-local" id="modal-todo-datetime">
                     </div>
-                    <label for="modal-todo-priority">Priority:</label>
+                    <label for="modal-todo-priority">Priority</label>
                     <select id="modal-todo-priority">
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
                     </select>
+                    <div class="tag-section">
+                        <label for="modal-todo-tags">Tags</label>
+                        <div id="modal-tag-container" class="tag-container"></div>
+                        <input type="text" id="modal-todo-tags" placeholder="Add a tag and press Enter...">
+                    </div>
                     <button type="submit">Save Task</button>
                 </form>
             </div>
