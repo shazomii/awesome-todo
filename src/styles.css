@@ -63,9 +63,11 @@ body {
 .todo-item {
     display: flex;
     flex-direction: column;
-    padding: 10px 0;
+    padding: 10px 0 10px 10px;
     border-bottom: 1px solid #f0f0f0;
     cursor: pointer;
+    border-left: 4px solid transparent;
+    transition: background-color 0.2s ease-out;
 }
 
 .todo-summary {
@@ -101,6 +103,18 @@ body {
 
 .todo-item.overdue .todo-details {
     color: #db4c3f;
+}
+
+.todo-item.priority-high {
+    border-left-color: #db4c3f;
+}
+
+.todo-item.priority-medium {
+    border-left-color: #f5a623;
+}
+
+.todo-item.priority-low {
+    border-left-color: #4a90e2;
 }
 
 .todo-details {

@@ -51,6 +51,10 @@ export const renderTodos = (todos, isDefaultView = false) => {
         todoItem.classList.add("todo-item");
         todoItem.dataset.todoId = todo.id;
 
+        if (todo.priority) {
+            todoItem.classList.add(`priority-${todo.priority}`);
+        }
+
         const now = new Date();
         if (todo.dueDate && new Date(todo.dueDate) < now && !todo.complete) {
             todoItem.classList.add("overdue");
