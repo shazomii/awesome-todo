@@ -11,7 +11,8 @@ export const appState = {
     sortAsc: true,
     filters: {
         searchTerm: "",
-        priority: "all"
+        priority: "all",
+        tag: "all"
     },
     globalSearchTerm: "",
 };
@@ -41,10 +42,11 @@ export const filterTodos = (todos) => {
     return todos.filter(todo => {
         const matchesSearch = !appState.filters.searchTerm || todo.title.toLowerCase().includes(appState.filters.searchTerm.toLowerCase()) || (todo.description && todo.description.toLowerCase().includes(appState.filters.searchTerm.toLowerCase()));
 
-        const matchesPriority = appState.filters.priority === "all" ||
-            todo.priority === appState.filters.priority;
+        const matchesPriority = appState.filters.priority === "all" || todo.priority === appState.filters.priority;
 
-        return matchesSearch && matchesPriority;
+        const matchesTag = appState.filters.tag === "all" || (todo.tags && todo.tags.includes(appState.filters.tag));
+
+        return matchesSearch && matchesPriority && matchesTag;
     });
 }
 
@@ -96,9 +98,9 @@ export const getTodosByCategory = (category) => {
             });
         case 'scheduled':
             return allTodos.filter(todo => {
-               if (!todo.dueDate || todo.complete) return false;
-               const dueDate = new Date(todo.dueDate);
-               return dueDate >= now;
+                if (!todo.dueDate || todo.complete) return false;
+                const dueDate = new Date(todo.dueDate);
+                return dueDate >= now;
             });
         case 'overdue':
             return allTodos.filter(todo => {
@@ -174,7 +176,7 @@ export const loadState = () => {
     if (prefs) {
         appState.sortBy = prefs.sortBy;
         appState.sortAsc = prefs.sortAsc;
-        appState.filters = prefs.filters || { searchTerm: "", priority: "all" };
+        appState.filters = prefs.filters || { searchTerm: "", priority: "all", tag: "all" };
 
         if (domElements.sortSelect) {
             domElements.sortSelect.value = prefs.sortBy;
@@ -182,8 +184,8 @@ export const loadState = () => {
         }
 
         if (domElements.taskFilter) {
-            domElements.taskFilter.value = prefs.filters.searchTerm;
-            domElements.priorityFilter.value = prefs.filters.priority;
+            domElements.taskFilter.value = appState.filters.searchTerm;
+            domElements.priorityFilter.value = appState.filters.priority;
         }
     }
 }
@@ -222,7 +224,8 @@ export const resetToDefaults = () => {
 export function resetFilters() {
     appState.filters = {
         searchTerm: "",
-        priority: "all"
+        priority: "all",
+        tag: "all"
     };
     appState.sortBy = "dueDate";
     appState.sortAsc = true;

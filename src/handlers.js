@@ -368,11 +368,18 @@ export function initializeEventListeners() {
         renderAll(appState);
     });
 
+    domElements.tagFilter.addEventListener("change", (e) => {
+        appState.filters.tag = e.target.value;
+        saveState();
+        renderAll(appState);
+    });
+
     domElements.resetFiltersBtn.addEventListener("click", () => {
         resetFilters();
 
         domElements.taskFilter.value = "";
         domElements.priorityFilter.value = "all";
+        domElements.tagFilter.value = "all";
         domElements.sortSelect.value = "dueDate";
         domElements.sortDirectionBtn.querySelector('.material-icons').textContent = 'arrow_upward';
 

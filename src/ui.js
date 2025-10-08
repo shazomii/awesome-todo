@@ -185,6 +185,28 @@ export const renderProjects = (projects, activeProject, viewMode) => {
     })
 }
 
+const renderTagFilterOptions = (projects) => {
+    const allTags = new Set(projects.flatMap(p => p.todos.flatMap(t => t.tags || [])));
+    const tagFilter = domElements.tagFilter;
+
+    const currentVal = tagFilter.value;
+
+    tagFilter.innerHTML = '<option value="all">All Tags</option>';
+
+    allTags.forEach(tag => {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.textContent = tag;
+        tagFilter.appendChild(option);
+    });
+
+    if (Array.from(tagFilter.options).some(opt => opt.value === currentVal)) {
+        tagFilter.value = currentVal;
+    } else {
+        tagFilter.value = 'all';
+    }
+};
+
 export const renderAll = (app) => {
     document.querySelectorAll(".nav-item").forEach(item => {
         item.classList.remove("active");
@@ -194,6 +216,8 @@ export const renderAll = (app) => {
     });
 
     renderProjects(app.projects, app.activeProject, app.viewMode);
+    renderTagFilterOptions(app.projects);
+    domElements.tagFilter.value = app.filters.tag;
 
     domElements.filterControls.style.display = app.viewMode === "search" ? "none" : "flex";
 

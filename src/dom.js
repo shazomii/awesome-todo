@@ -33,6 +33,7 @@ export const domElements = {
     sortDirectionBtn: document.querySelector("#sort-direction-btn"),
     taskFilter: document.querySelector("#task-filter"),
     priorityFilter: document.querySelector("#priority-filter"),
+    tagFilter: document.querySelector("#tag-filter"),
     resetFiltersBtn: document.querySelector("#reset-filters-btn"),
     filterControls: document.querySelector(".filter-controls"),
     globalSearch: document.querySelector("#global-search"),
