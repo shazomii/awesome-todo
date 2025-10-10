@@ -155,6 +155,7 @@ export const loadState = () => {
         appState.projects = projectsData.map(projectData => {
             const project = createProject(projectData.name);
             project.id = projectData.id;
+            project.isArchived = projectData.isArchived || false;
             projectData.todos.forEach(todoData => {
                 const todo = createTodo(
                     todoData.title,
@@ -170,7 +171,7 @@ export const loadState = () => {
             return project;
         });
     }
-    appState.activeProject = appState.projects[0] || null;
+    appState.activeProject = appState.projects.find(p => !p.isArchived) || null;
 
     const prefs = JSON.parse(localStorage.getItem("todoapp.prefs"));
     if (prefs) {

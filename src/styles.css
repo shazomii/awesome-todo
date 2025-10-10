@@ -842,6 +842,48 @@ body {
     margin-bottom: 8px;
 }
 
+#project-list .empty-state p,
+#archived-project-list .empty-state p {
+    padding: 0;
+    font-style: italic;
+}
+
+.project-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    padding: 2px;
+}
+
+.project-item:hover .project-action-btn {
+    opacity: 1;
+}
+
+.project-action-btn .material-icons {
+    font-size: 18px;
+    color: #888;
+}
+
+.project-action-btn:hover .material-icons {
+    color: #db4c3f;
+}
+
+#archived-projects-section {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+}
+
+#archived-projects-section h2 {
+    padding: 0 10px 10px 10px;
+}
+
+#toggle-archived-btn {
+    margin-bottom: 0;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -1002,7 +1044,7 @@ body {
         padding: 20px;
     }
 
-     .filter-controls {
+    .filter-controls {
         flex-direction: column;
         align-items: stretch;
         gap: 8px;

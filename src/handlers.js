@@ -160,24 +160,22 @@ export function initializeEventListeners() {
 
         if (e.target.matches(".delete-project-btn")) {
             const todoCount = project.todos.length;
-            const title = "Delete Project";
+            const title = `Archive "${project.name}"?`;
             const message = todoCount > 0
-                ? `Are you sure you want to delete "${project.name}" and its ${todoCount} task${todoCount === 1 ? '' : 's'}?`
-                : `Are you sure you want to delete "${project.name}"?`;
+                ? `Are you sure you want to archive "${project.name}" and its ${todoCount} task${todoCount === 1 ? '' : 's'}?`
+                : `Are you sure you want to archive "${project.name}"?`;
 
-            const confirmed = await showConfirmDialog(title, message);
+            const confirmed = await showConfirmDialog(title, message, "Archive");
 
             if (confirmed) {
-                const projectIndex = appState.projects.findIndex(p => p.id === projectId);
-                if (projectIndex > -1) {
-                    appState.projects.splice(projectIndex, 1);
-                    if (appState.activeProject && appState.activeProject.id === projectId) {
-                        appState.activeProject = appState.projects[0] || null;
-                    }
-                    saveState();
-                    renderAll(appState);
-                    showNotification(`Project "${project.name}" has been deleted`, "warning");
+                project.isArchived = true;
+                if (appState.activeProject && appState.activeProject.id === projectId) {
+                    appState.activeProject = null;
+                    appState.viewMode = 'today';
                 }
+                saveState();
+                renderAll(appState);
+                showNotification(`Project "${project.name}" has been archived.`, "warning");
             }
         } else {
             const newActiveProject = appState.projects.find(p => p.id === projectId);
@@ -194,6 +192,44 @@ export function initializeEventListeners() {
                 }
             }
         }
+    });
+
+    domElements.archivedProjectList.addEventListener('click', async (e) => {
+        const projectItem = e.target.closest(".project-item");
+        if (!projectItem) return;
+
+        const projectId = projectItem.dataset.projectId;
+        const project = appState.projects.find(p => p.id === projectId);
+
+        if (e.target.closest('.restore-project-btn')) {
+            project.isArchived = false;
+            saveState();
+            renderAll(appState);
+            showNotification(`Project "${project.name}" has been restored.`, "success");
+        }
+
+        if (e.target.closest('.permanent-delete-btn')) {
+            const confirmed = await showConfirmDialog(`Delete "${project.name}" permanently?`, "This action cannot be undone.", "Delete");
+
+            if (confirmed) {
+                const projectIndex = appState.projects.findIndex(p => p.id === projectId);
+                if (projectIndex > -1) {
+                    appState.projects.splice(projectIndex, 1);
+                    saveState();
+                    renderAll(appState);
+                    showNotification(`Project "${project.name}" was permanently deleted.`, "error");
+                }
+            }
+        }
+    });
+
+    domElements.toggleArchivedBtn.addEventListener('click', () => {
+        const section = domElements.archivedProjectsSection;
+        const buttonText = domElements.toggleArchivedBtn.querySelector('span:last-child');
+        const isHidden = section.style.display === 'none';
+
+        section.style.display = isHidden ? 'block' : 'none';
+        buttonText.textContent = isHidden ? 'Hide Archived' : 'Show Archived';
     });
 
     domElements.projectTitle.addEventListener("blur", handleProjectRename);

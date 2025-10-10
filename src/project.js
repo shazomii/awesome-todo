@@ -14,6 +14,6 @@ export const createProject = (name, description = "") => {
 
     return {
         id: crypto.randomUUID(),
-        name, description, get todos() { return todos }, addTodo, removeTodo,
+        name, description, get todos() { return todos }, addTodo, removeTodo, isArchived: false,
     };
 };

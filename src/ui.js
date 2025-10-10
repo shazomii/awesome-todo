@@ -135,24 +135,32 @@ export const renderTodos = (todos, isDefaultView = false) => {
     });
 };
 
-export const renderProjects = (projects, activeProject, viewMode) => {
-    const projectList = domElements.projectListContainer;
-    projectList.innerHTML = "";
+const renderProjects = (projects, activeProject, viewMode) => {
+    const activeProjects = projects.filter(p => !p.isArchived);
+    const archivedProjects = projects.filter(p => p.isArchived);
+
+    renderProjectList(domElements.projectListContainer, activeProjects, { activeProject, viewMode });
+    renderProjectList(domElements.archivedProjectList, archivedProjects, { activeProject, viewMode, isArchived: true });
+
+    const archivedSection = domElements.archivedProjectsSection;
+    const toggleBtn = domElements.toggleArchivedBtn;
+    if (archivedProjects.length > 0) {
+        toggleBtn.style.display = 'flex';
+    } else {
+        toggleBtn.style.display = 'none';
+        archivedSection.style.display = 'none';
+        toggleBtn.querySelector('span:last-child').textContent = 'Show Archived';
+    }
+}
+
+const renderProjectList = (container, projects, options) => {
+    container.innerHTML = "";
 
     if (!projects || projects.length === 0) {
         const emptyState = document.createElement("div");
         emptyState.classList.add("empty-state");
-
-        const icon = document.createElement("span");
-        icon.classList.add("material-icons");
-        icon.textContent = "folder";
-
-        const message = document.createElement("p");
-        message.textContent = "No projects yet. Create your first project!";
-
-        emptyState.appendChild(icon);
-        emptyState.appendChild(message);
-        projectList.appendChild(emptyState);
+        emptyState.innerHTML = `<p>${options.isArchived ? 'No archived projects.' : 'No projects yet.'}</p>`;
+        container.appendChild(emptyState);
         return;
     }
 
@@ -163,30 +171,31 @@ export const renderProjects = (projects, activeProject, viewMode) => {
 
         const projectNameSpan = document.createElement("span");
         projectNameSpan.textContent = project.name;
+        projectEl.appendChild(projectNameSpan);
 
-        const incompleteTasks = project.todos.filter(todo => !todo.complete).length;
-        if (incompleteTasks > 0) {
-            const badgeSpan = document.createElement("span");
-            badgeSpan.classList.add("task-count");
-            badgeSpan.textContent = incompleteTasks;
-            projectEl.appendChild(projectNameSpan);
-            projectEl.appendChild(badgeSpan);
+        if (options.isArchived) {
+            projectEl.innerHTML += `
+                <button class="project-action-btn restore-project-btn" title="Restore"><span class="material-icons">unarchive</span></button>
+                <button class="project-action-btn permanent-delete-btn" title="Delete Permanently"><span class="material-icons">delete_forever</span></button>
+            `;
         } else {
-            projectEl.appendChild(projectNameSpan);
+            const incompleteTasks = project.todos.filter(todo => !todo.complete).length;
+            if (incompleteTasks > 0) {
+                const badgeSpan = document.createElement("span");
+                badgeSpan.classList.add("task-count");
+                badgeSpan.textContent = incompleteTasks;
+                projectEl.appendChild(badgeSpan);
+            }
+            projectEl.innerHTML += '<button class="delete-project-btn" title="Archive Project">&times;</button>';
         }
 
-        const deleteBtn = document.createElement("button");
-        deleteBtn.classList.add("delete-project-btn");
-        deleteBtn.innerHTML = "&times;";
-
-        projectEl.appendChild(deleteBtn);
-
-        if (viewMode === "project" && activeProject && project.id === activeProject.id) {
+        if (options.viewMode === "project" && options.activeProject && project.id === options.activeProject.id) {
             projectEl.classList.add("active");
         }
 
-        projectList.appendChild(projectEl);
+        container.appendChild(projectEl);
     })
+
 }
 
 const renderTagFilterOptions = (projects) => {
