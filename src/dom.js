@@ -5,6 +5,9 @@ export const domElements = {
     closeSidebarBtn: document.querySelector("#close-sidebar-btn"),
     defaultCategoryList: document.querySelector(".default-categories"),
     restoreDefaultsBtn: document.querySelector("#restore-defaults-btn"),
+    themeToggleBtn: document.querySelector("#theme-toggle-btn"),
+    themeToggleIcon: document.querySelector("#theme-toggle-btn .material-icons"),
+    themeToggleText: document.querySelector("#theme-toggle-btn span:last-child"),
 
     // Project elements
     addProjectBtn: document.querySelector("#add-project-btn"),

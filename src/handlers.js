@@ -92,6 +92,25 @@ export function initializeEventListeners() {
         }
     });
 
+    domElements.themeToggleBtn.addEventListener('click', () => {
+    const root = document.documentElement;
+    const newTheme = appState.theme === 'light' ? 'dark' : 'light';
+    
+    root.classList.add('theme-transition');
+    
+    appState.theme = newTheme;
+    root.setAttribute('data-theme', newTheme);
+    
+    domElements.themeToggleIcon.textContent = newTheme === 'dark' ? 'light_mode' : 'dark_mode';
+    domElements.themeToggleText.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    
+    setTimeout(() => {
+        root.classList.remove('theme-transition');
+    }, 300);
+    
+    saveState();
+});
+
     domElements.menuBtn.addEventListener('click', toggleSidebar);
 
     domElements.closeSidebarBtn.addEventListener('click', toggleSidebar);

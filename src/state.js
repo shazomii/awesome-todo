@@ -15,6 +15,7 @@ export const appState = {
         tag: "all"
     },
     globalSearchTerm: "",
+    theme: "light",
 };
 
 export const searchAllTodos = (searchTerm) => {
@@ -120,7 +121,8 @@ export const saveState = () => {
     localStorage.setItem("todoapp.prefs", JSON.stringify({
         sortBy: appState.sortBy,
         sortAsc: appState.sortAsc,
-        filters: appState.filters
+        filters: appState.filters,
+        theme: appState.theme
     }));
 }
 
@@ -178,6 +180,13 @@ export const loadState = () => {
         appState.sortBy = prefs.sortBy;
         appState.sortAsc = prefs.sortAsc;
         appState.filters = prefs.filters || { searchTerm: "", priority: "all", tag: "all" };
+        appState.theme = prefs.theme || 'light';
+        document.documentElement.setAttribute('data-theme', appState.theme);
+        
+        if (domElements.themeToggleIcon) {
+            domElements.themeToggleIcon.textContent = appState.theme === 'dark' ? 'light_mode' : 'dark_mode';
+            domElements.themeToggleText.textContent = appState.theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+        }
 
         if (domElements.sortSelect) {
             domElements.sortSelect.value = prefs.sortBy;
