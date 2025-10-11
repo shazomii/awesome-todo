@@ -79,7 +79,7 @@ export const sortTodos = (todos) => {
 
 export const getTodosByCategory = (category) => {
     const allTodos = appState.projects.flatMap(project =>
-        project.todos.map(todo => ({ ...todo, projectName: project.name }))
+        project.todos.map(todo => ({ ...todo, projectName: project.name, projectId: project.id }))
     );
 
     const now = new Date();
@@ -96,7 +96,7 @@ export const getTodosByCategory = (category) => {
                 const dueDate = new Date(todo.dueDate);
                 return dueDate >= today && dueDate < tomorrow;
             });
-        case 'scheduled':
+        case 'upcoming':
             return allTodos.filter(todo => {
                 if (!todo.dueDate || todo.complete) return false;
                 const dueDate = new Date(todo.dueDate);
@@ -153,7 +153,7 @@ export const loadState = () => {
     } else {
         const projectsData = JSON.parse(projectsJSON);
         appState.projects = projectsData.map(projectData => {
-            const project = createProject(projectData.name);
+            const project = createProject(projectData.name, projectData.description, projectData.color);
             project.id = projectData.id;
             project.isArchived = projectData.isArchived || false;
             projectData.todos.forEach(todoData => {
@@ -192,10 +192,14 @@ export const loadState = () => {
 }
 
 export const resetToDefaults = () => {
-    const gardenProject = createProject("Garden");
-    const launchProject = createProject("Launch");
-    const wellnessProject = createProject("Wellness");
-    const cleanupProject = createProject("Cleanup");
+    const projectColors = ['#db4c3f', '#f5a623', '#4a90e2', '#4caf50', '#9b59b6'];
+    const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    const gardenProject = createProject("Garden", "A project to cultivate and maintain a beautiful garden.", getRandomItem(projectColors));
+    const launchProject = createProject("Launch", "Tasks related to launching a new website or product.", getRandomItem(projectColors));
+    const wellnessProject = createProject("Wellness", "Activities focused on personal health and wellness.", getRandomItem(projectColors));
+    const cleanupProject = createProject("Cleanup", "A plan to declutter and organize a specific area.", getRandomItem(projectColors));
+
 
     gardenProject.addTodo(garden1);
     gardenProject.addTodo(garden2);

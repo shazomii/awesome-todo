@@ -54,7 +54,7 @@ body {
     font-size: 12px;
     font-weight: bold;
     padding: 2px 8px;
-    background-color: #db4c3f;
+    background-color: var(--project-color, #db4c3f);
     border-radius: 3px;
     margin: 0 8px 0 8px;
     color: white;
@@ -195,19 +195,31 @@ body {
 }
 
 #show-todo-modal-btn {
-    background: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background-color: #db4c3f;
+    color: white;
     border: none;
-    color: #888;
-    cursor: pointer;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    padding: 8px 0;
-    font-size: 14px;
-    margin-top: 10px;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease-out, background-color 0.2s;
+    z-index: 999;
 }
 
 #show-todo-modal-btn:hover {
-    color: #db4c3f;
+    background-color: #c53727;
+    transform: scale(1.05);
+}
+
+#show-todo-modal-btn .material-icons {
+    font-size: 28px;
 }
 
 .modal {
@@ -553,6 +565,7 @@ body {
     align-items: center;
     gap: 8px;
     font-weight: 500;
+    border-left: 4px solid var(--project-color, transparent);
 }
 
 .project-item span:first-child {
@@ -573,7 +586,7 @@ body {
 
 .project-item.active {
     background-color: #eee;
-    color: #db4c3f;
+    color: var(--project-color, #db4c3f);
     font-weight: bold;
 }
 
@@ -593,12 +606,12 @@ body {
 }
 
 .project-item.active .task-count {
-    background-color: #db4c3f;
+    background-color: var(--project-color, #db4c3f);
     color: white;
 }
 
 .project-item:hover .task-count {
-    background-color: #db4c3f;
+    background-color: var(--project-color, #db4c3f);
     color: white;
 }
 
@@ -807,6 +820,29 @@ body {
 .new-project-form .form-buttons {
     display: flex;
     gap: 8px;
+}
+
+.color-palette {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.color-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s;
+}
+
+.color-dot:hover {
+    transform: scale(1.1);
+}
+
+.color-dot.active {
+    border-color: #333;
 }
 
 .empty-state {

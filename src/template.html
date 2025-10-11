@@ -27,9 +27,9 @@
                     <span class="material-icons">today</span>
                     <span>Today</span>
                 </div>
-                <div class="nav-item" data-category="scheduled">
+                <div class="nav-item" data-category="upcoming">
                     <span class="material-icons">calendar_month</span>
-                    <span>Scheduled</span>
+                    <span>Upcoming</span>
                 </div>
                 <div class="nav-item" data-category="overdue">
                     <span class="material-icons">event_busy</span>
@@ -49,6 +49,14 @@
             <div class="new-project-form" style="display: none;">
                 <input type="text" id="new-project-input" placeholder="New project name...">
                 <textarea id="new-project-description" placeholder="Project description (optional)..."></textarea>
+                <div class="color-palette">
+                    <span class="color-dot active" data-color="#808080" style="background-color: #808080;"></span>
+                    <span class="color-dot" data-color="#db4c3f" style="background-color: #db4c3f;"></span>
+                    <span class="color-dot" data-color="#f5a623" style="background-color: #f5a623;"></span>
+                    <span class="color-dot" data-color="#4a90e2" style="background-color: #4a90e2;"></span>
+                    <span class="color-dot" data-color="#4caf50" style="background-color: #4caf50;"></span>
+                    <span class="color-dot" data-color="#9b59b6" style="background-color: #9b59b6;"></span>
+                </div>
                 <div class="form-buttons">
                     <button id="confirm-add-project-btn">Add</button>
                     <button id="cancel-add-project-btn">Cancel</button>
@@ -116,7 +124,7 @@
                     Reset Filters
                 </button>
             </div>
-            <button id="show-todo-modal-btn">+ Add Task</button>
+            <button id="show-todo-modal-btn"><span class="material-icons">add</span></button>
             <div id="todo-list-container">
             </div>
         </div>

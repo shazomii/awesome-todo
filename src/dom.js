@@ -10,6 +10,7 @@ export const domElements = {
     addProjectBtn: document.querySelector("#add-project-btn"),
     newProjectForm: document.querySelector(".new-project-form"),
     newProjectInput: document.querySelector("#new-project-input"),
+    newProjectColorPalette: document.querySelector(".new-project-form .color-palette"),
     confirmAddProjectBtn: document.querySelector("#confirm-add-project-btn"),
     cancelAddProjectBtn: document.querySelector("#cancel-add-project-btn"),
     projectListContainer: document.querySelector("#project-list"),

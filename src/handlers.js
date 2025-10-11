@@ -102,18 +102,20 @@ export function initializeEventListeners() {
         e.preventDefault();
         showProjectForm(false);
         domElements.newProjectInput.value = "";
+        domElements.newProjectDescription.value = "";
     });
 
     domElements.confirmAddProjectBtn.addEventListener("click", () => {
         const projectName = domElements.newProjectInput.value.trim();
         const projectDescription = domElements.newProjectDescription.value.trim();
+        const selectedColor = domElements.newProjectColorPalette.querySelector('.color-dot.active').dataset.color;
 
         if (projectName) {
             if (appState.projects.find(p => p.name === projectName)) {
                 showNotification(`Project "${projectName}" already exists`, "error");
                 return;
             }
-            const newProject = createProject(projectName, projectDescription);
+            const newProject = createProject(projectName, projectDescription, selectedColor);
             appState.projects.push(newProject);
             appState.activeProject = newProject;
 
@@ -234,6 +236,13 @@ export function initializeEventListeners() {
 
     domElements.projectTitle.addEventListener("blur", handleProjectRename);
     domElements.projectTitle.addEventListener("keydown", handleProjectRenameKeydown);
+
+    domElements.newProjectColorPalette.addEventListener('click', (e) => {
+    if (e.target.classList.contains('color-dot')) {
+        domElements.newProjectColorPalette.querySelector('.active').classList.remove('active');
+        e.target.classList.add('active');
+    }
+});
 
     domElements.showTodoModalBtn.addEventListener("click", () => {
         domElements.todoDetailsForm.reset();

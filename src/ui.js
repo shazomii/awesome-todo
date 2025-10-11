@@ -1,6 +1,6 @@
 import { parseISO, isValid, format } from 'date-fns';
 import { domElements } from './dom.js';
-import { filterTodos, getTodosByCategory, searchAllTodos, sortTodos } from './state.js';
+import { appState, filterTodos, getTodosByCategory, searchAllTodos, sortTodos } from './state.js';
 
 export const renderTodos = (todos, isDefaultView = false) => {
     const todoListContainer = domElements.todoListContainer;
@@ -87,6 +87,10 @@ export const renderTodos = (todos, isDefaultView = false) => {
             const projectBadge = document.createElement("span");
             projectBadge.classList.add("project-badge");
             projectBadge.textContent = todo.projectName;
+            const project = appState.projects.find(p => p.id === todo.projectId);
+            if (project) {
+                projectBadge.style.setProperty('--project-color', project.color);
+            }
             todoSummary.appendChild(projectBadge);
         }
         todoSummary.appendChild(title);
@@ -168,6 +172,7 @@ const renderProjectList = (container, projects, options) => {
         const projectEl = document.createElement("div");
         projectEl.classList.add("project-item");
         projectEl.dataset.projectId = project.id;
+        projectEl.style.setProperty('--project-color', project.color);
 
         const projectNameSpan = document.createElement("span");
         projectNameSpan.textContent = project.name;
@@ -261,7 +266,7 @@ export const renderAll = (app) => {
     } else {
         const categoryTitle = {
             today: "Today",
-            scheduled: "Scheduled",
+            upcoming: "Upcoming",
             overdue: "Overdue",
             completed: "Completed"
         }[app.viewMode];
