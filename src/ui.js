@@ -1,54 +1,59 @@
 import { parseISO, isValid, format } from 'date-fns';
 import { domElements } from './dom.js';
-import { appState, filterTodos, getTodosByCategory, searchAllTodos, sortTodos } from './state.js';
+import { appState, filterTodos, getVisibleTodos, getTodosByCategory, searchAllTodos, sortTodos } from './state.js';
+
+const createEmptyState = (container, message, iconName = 'task') => {
+    const emptyState = document.createElement('div');
+    emptyState.classList.add('empty-state');
+
+    const icon = document.createElement('span');
+    icon.classList.add('material-icons');
+    icon.textContent = iconName;
+
+    const messageEl = document.createElement('p');
+    messageEl.textContent = message;
+
+    emptyState.append(icon, messageEl);
+    container.replaceChildren(emptyState);
+};
+
+const createProjectActionButton = ({ className, title, iconName, type = 'button' }) => {
+    const button = document.createElement('button');
+    button.type = type;
+    button.classList.add(className);
+    button.title = title;
+
+    const icon = document.createElement('span');
+    icon.classList.add('material-icons');
+    icon.textContent = iconName;
+    button.appendChild(icon);
+    return button;
+};
 
 export const renderTodos = (todos, isDefaultView = false) => {
     const todoListContainer = domElements.todoListContainer;
-    todoListContainer.innerHTML = "";
+    todoListContainer.replaceChildren();
 
     if (!todos || todos.length === 0) {
-        const emptyState = document.createElement("div");
-        emptyState.classList.add("empty-state");
-
-        const icon = document.createElement("span");
-        icon.classList.add("material-icons");
-        icon.textContent = "task";
-
-        const message = document.createElement("p");
-        message.textContent = isDefaultView
-            ? "No tasks found."
+        const message = isDefaultView
+            ? 'No tasks found.'
             : "No tasks yet. Click the '+' button above to add one!";
-
-        emptyState.appendChild(icon);
-        emptyState.appendChild(message);
-        todoListContainer.appendChild(emptyState);
+        createEmptyState(todoListContainer, message, 'task');
         return;
     }
 
     const filteredTodos = filterTodos(todos);
 
     if (filteredTodos.length === 0) {
-        const emptyState = document.createElement("div");
-        emptyState.classList.add("empty-state");
-
-        const icon = document.createElement("span");
-        icon.classList.add("material-icons");
-        icon.textContent = "search_off";
-
-        const message = document.createElement("p");
-        message.textContent = "No tasks match your filters";
-
-        emptyState.appendChild(icon);
-        emptyState.appendChild(message);
-        todoListContainer.appendChild(emptyState);
+        createEmptyState(todoListContainer, 'No tasks match your filters', 'search_off');
         return;
     }
 
     const sortedTodos = sortTodos(filteredTodos);
 
     sortedTodos.forEach(todo => {
-        const todoItem = document.createElement("div");
-        todoItem.classList.add("todo-item");
+        const todoItem = document.createElement('div');
+        todoItem.classList.add('todo-item');
         todoItem.dataset.todoId = todo.id;
 
         if (todo.priority) {
@@ -57,68 +62,72 @@ export const renderTodos = (todos, isDefaultView = false) => {
 
         const now = new Date();
         if (todo.dueDate && new Date(todo.dueDate) < now && !todo.complete) {
-            todoItem.classList.add("overdue");
+            todoItem.classList.add('overdue');
         }
 
-        const todoSummary = document.createElement("div");
-        todoSummary.classList.add("todo-summary");
+        const todoSummary = document.createElement('div');
+        todoSummary.classList.add('todo-summary');
 
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
         checkbox.checked = todo.complete;
 
-        const title = document.createElement("p");
+        const title = document.createElement('p');
         title.textContent = todo.title;
+
         if (todo.complete) {
-            todoItem.classList.add("complete");
+            todoItem.classList.add('complete');
         }
 
-        const deleteBtn = document.createElement("button");
-        deleteBtn.classList.add("delete-btn");
-        deleteBtn.innerHTML = "&times;";
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.textContent = '×';
 
-        const editBtn = document.createElement("button");
-        editBtn.classList.add("edit-btn");
-        editBtn.innerHTML = '<span class="material-icons">edit</span>';
+        const editBtn = createProjectActionButton({
+            className: 'edit-btn',
+            title: 'Edit task',
+            iconName: 'edit',
+        });
 
-
-        todoSummary.appendChild(checkbox);
+        todoSummary.append(checkbox);
         if (isDefaultView) {
-            const projectBadge = document.createElement("span");
-            projectBadge.classList.add("project-badge");
+            const projectBadge = document.createElement('span');
+            projectBadge.classList.add('project-badge');
             projectBadge.textContent = todo.projectName;
             const project = appState.projects.find(p => p.id === todo.projectId);
             if (project) {
                 projectBadge.style.setProperty('--project-color', project.color);
             }
-            todoSummary.appendChild(projectBadge);
+            todoSummary.append(projectBadge);
         }
-        todoSummary.appendChild(title);
-        todoSummary.appendChild(editBtn);
-        todoSummary.appendChild(deleteBtn);
+        todoSummary.append(title, editBtn, deleteBtn);
 
-        const todoDetails = document.createElement("div");
-        todoDetails.classList.add("todo-details");
+        const todoDetails = document.createElement('div');
+        todoDetails.classList.add('todo-details');
 
-        let formattedDate = "No due date";
+        let formattedDate = 'No due date';
         if (todo.dueDate) {
             try {
                 const parsed = parseISO(todo.dueDate);
-                if (isValid(parsed)) {
-                    formattedDate = format(parsed, 'PP, p');
-                } else {
-                    formattedDate = todo.dueDate;
-                }
+                formattedDate = isValid(parsed) ? format(parsed, 'PP, p') : todo.dueDate;
             } catch (err) {
                 formattedDate = todo.dueDate;
             }
         }
 
-        todoDetails.innerHTML = `
-        <p>${todo.description}</p>
-        <p><strong>Due:</strong> ${formattedDate}</p>
-        <p><strong>Priority:</strong> ${todo.priority}</p>
-        `;
+        const description = document.createElement('p');
+        description.textContent = todo.description || 'No description';
+
+        const dueDateRow = document.createElement('p');
+        dueDateRow.innerHTML = '<strong>Due:</strong> ';
+        dueDateRow.append(document.createTextNode(formattedDate));
+
+        const priorityRow = document.createElement('p');
+        priorityRow.innerHTML = '<strong>Priority:</strong> ';
+        priorityRow.append(document.createTextNode(todo.priority || 'normal'));
+
+        todoDetails.append(description, dueDateRow, priorityRow);
 
         if (todo.tags && todo.tags.length > 0) {
             const tagsContainer = document.createElement('div');
@@ -132,9 +141,7 @@ export const renderTodos = (todos, isDefaultView = false) => {
             todoDetails.appendChild(tagsContainer);
         }
 
-        todoItem.appendChild(todoSummary);
-        todoItem.appendChild(todoDetails);
-
+        todoItem.append(todoSummary, todoDetails);
         todoListContainer.appendChild(todoItem);
     });
 };
@@ -155,61 +162,73 @@ const renderProjects = (projects, activeProject, viewMode) => {
         archivedSection.style.display = 'none';
         toggleBtn.querySelector('span:last-child').textContent = 'Show Archived';
     }
-}
+};
 
 const renderProjectList = (container, projects, options) => {
-    container.innerHTML = "";
+    container.replaceChildren();
 
     if (!projects || projects.length === 0) {
-        const emptyState = document.createElement("div");
-        emptyState.classList.add("empty-state");
-        emptyState.innerHTML = `<p>${options.isArchived ? 'No archived projects.' : 'No projects yet.'}</p>`;
+        const emptyState = document.createElement('div');
+        emptyState.classList.add('empty-state');
+
+        const message = document.createElement('p');
+        message.textContent = options.isArchived ? 'No archived projects.' : 'No projects yet.';
+        emptyState.appendChild(message);
         container.appendChild(emptyState);
         return;
     }
 
     projects.forEach(project => {
-        const projectEl = document.createElement("div");
-        projectEl.classList.add("project-item");
+        const projectEl = document.createElement('div');
+        projectEl.classList.add('project-item');
         projectEl.dataset.projectId = project.id;
         projectEl.style.setProperty('--project-color', project.color);
 
-        const projectNameSpan = document.createElement("span");
+        const projectNameSpan = document.createElement('span');
         projectNameSpan.textContent = project.name;
         projectEl.appendChild(projectNameSpan);
 
         if (options.isArchived) {
-            projectEl.innerHTML += `
-                <button class="project-action-btn restore-project-btn" title="Restore"><span class="material-icons">unarchive</span></button>
-                <button class="project-action-btn permanent-delete-btn" title="Delete Permanently"><span class="material-icons">delete_forever</span></button>
-            `;
+            projectEl.append(
+                createProjectActionButton({ className: 'project-action-btn restore-project-btn', title: 'Restore', iconName: 'unarchive' }),
+                createProjectActionButton({ className: 'project-action-btn permanent-delete-btn', title: 'Delete Permanently', iconName: 'delete_forever' })
+            );
         } else {
             const incompleteTasks = project.todos.filter(todo => !todo.complete).length;
             if (incompleteTasks > 0) {
-                const badgeSpan = document.createElement("span");
-                badgeSpan.classList.add("task-count");
+                const badgeSpan = document.createElement('span');
+                badgeSpan.classList.add('task-count');
                 badgeSpan.textContent = incompleteTasks;
                 projectEl.appendChild(badgeSpan);
             }
-            projectEl.innerHTML += '<button class="delete-project-btn" title="Archive Project">&times;</button>';
+
+            const deleteProjectBtn = document.createElement('button');
+            deleteProjectBtn.type = 'button';
+            deleteProjectBtn.classList.add('delete-project-btn');
+            deleteProjectBtn.title = 'Archive Project';
+            deleteProjectBtn.textContent = '×';
+            projectEl.appendChild(deleteProjectBtn);
         }
 
-        if (options.viewMode === "project" && options.activeProject && project.id === options.activeProject.id) {
-            projectEl.classList.add("active");
+        if (options.viewMode === 'project' && options.activeProject && project.id === options.activeProject.id) {
+            projectEl.classList.add('active');
         }
 
         container.appendChild(projectEl);
-    })
-
-}
+    });
+};
 
 const renderTagFilterOptions = (projects) => {
-    const allTags = new Set(projects.flatMap(p => p.todos.flatMap(t => t.tags || [])));
+    const allTags = [...new Set(projects.flatMap(p => p.todos.flatMap(t => t.tags || [])))].sort((a, b) => a.localeCompare(b));
     const tagFilter = domElements.tagFilter;
-
     const currentVal = tagFilter.value;
 
-    tagFilter.innerHTML = '<option value="all">All Tags</option>';
+    tagFilter.replaceChildren();
+
+    const allOption = document.createElement('option');
+    allOption.value = 'all';
+    allOption.textContent = 'All Tags';
+    tagFilter.appendChild(allOption);
 
     allTags.forEach(tag => {
         const option = document.createElement('option');
@@ -225,60 +244,63 @@ const renderTagFilterOptions = (projects) => {
     }
 };
 
-export const renderAll = (app) => {
-    document.querySelectorAll(".nav-item").forEach(item => {
-        item.classList.remove("active");
-        if (item.dataset.category === app.viewMode) {
-            item.classList.add("active");
-        }
+const syncViewState = (app) => {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.category === app.viewMode);
     });
 
     renderProjects(app.projects, app.activeProject, app.viewMode);
     renderTagFilterOptions(app.projects);
     domElements.tagFilter.value = app.filters.tag;
+    domElements.filterControls.style.display = app.viewMode === 'search' ? 'none' : 'flex';
+};
 
-    domElements.filterControls.style.display = app.viewMode === "search" ? "none" : "flex";
+export const renderAll = (app) => {
+    syncViewState(app);
 
-    if (app.viewMode === "project" && app.activeProject) {
-        domElements.projectTitle.classList.add("editable");
+    if (app.viewMode === 'project' && app.activeProject) {
+        domElements.projectTitle.classList.add('editable');
         domElements.projectTitle.contentEditable = true;
-        domElements.projectTitle.textContent = app.activeProject.name
+        domElements.projectTitle.textContent = app.activeProject.name;
 
-        domElements.projectDescription.classList.add("editable");
+        domElements.projectDescription.classList.add('editable');
         domElements.projectDescription.contentEditable = true;
-        domElements.projectDescription.textContent = app.activeProject.description || "Add project description...";
+        domElements.projectDescription.textContent = app.activeProject.description || 'Add project description...';
         if (!app.activeProject.description) {
-            domElements.projectDescription.classList.add("empty");
+            domElements.projectDescription.classList.add('empty');
         }
 
-        domElements.projectDescription.style.display = "block";
-        domElements.showTodoModalBtn.style.display = "block";
-        renderTodos(app.activeProject.todos);
-    } else if (app.viewMode === "search") {
-        domElements.projectTitle.textContent = `Search Results for: "${app.globalSearchTerm}"`;
-        domElements.projectTitle.classList.remove("editable");
-        domElements.projectTitle.contentEditable = false;
-        domElements.projectDescription.style.display = "none";
-        domElements.showTodoModalBtn.style.display = "none";
-
-        const searchResults = searchAllTodos(app.globalSearchTerm || "");
-        renderTodos(searchResults, true);
-    } else {
-        const categoryTitle = {
-            today: "Today",
-            upcoming: "Upcoming",
-            overdue: "Overdue",
-            completed: "Completed"
-        }[app.viewMode];
-
-        domElements.projectTitle.textContent = categoryTitle;
-        domElements.projectTitle.classList.remove("editable");
-        domElements.projectTitle.contentEditable = false;
-        domElements.projectDescription.style.display = "none";
-        domElements.showTodoModalBtn.style.display = "none";
-        renderTodos(getTodosByCategory(app.viewMode), true);
+        domElements.projectDescription.style.display = 'block';
+        domElements.showTodoModalBtn.style.display = 'block';
+        renderTodos(getVisibleTodos(app.viewMode, app.activeProject.id), false);
+        return;
     }
-}
+
+    if (app.viewMode === 'search') {
+        domElements.projectTitle.textContent = `Search Results for: "${app.globalSearchTerm}"`;
+        domElements.projectTitle.classList.remove('editable');
+        domElements.projectTitle.contentEditable = false;
+        domElements.projectDescription.style.display = 'none';
+        domElements.showTodoModalBtn.style.display = 'none';
+
+        renderTodos(getVisibleTodos(app.viewMode, null, app.globalSearchTerm), true);
+        return;
+    }
+
+    const categoryTitle = {
+        today: 'Today',
+        upcoming: 'Upcoming',
+        overdue: 'Overdue',
+        completed: 'Completed'
+    }[app.viewMode];
+
+    domElements.projectTitle.textContent = categoryTitle;
+    domElements.projectTitle.classList.remove('editable');
+    domElements.projectTitle.contentEditable = false;
+    domElements.projectDescription.style.display = 'none';
+    domElements.showTodoModalBtn.style.display = 'none';
+    renderTodos(getVisibleTodos(app.viewMode), true);
+};
 
 export const showProjectForm = (show) => {
     domElements.newProjectForm.style.display = show ? 'block' : 'none';

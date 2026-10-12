@@ -60,6 +60,35 @@ function debounce(func, wait) {
     };
 }
 
+function setProjectView(projectId) {
+    const nextProject = appState.projects.find(p => p.id === projectId);
+    if (!nextProject) return false;
+
+    const isSameProject = appState.activeProject?.id === nextProject.id && appState.viewMode === 'project';
+    if (isSameProject) return false;
+
+    appState.activeProject = nextProject;
+    appState.viewMode = 'project';
+
+    if (window.innerWidth <= 768) {
+        toggleSidebar();
+    }
+
+    renderAll(appState);
+    return true;
+}
+
+function setGlobalSearchTerm(searchTerm) {
+    const nextSearchTerm = searchTerm.trim();
+    const isSameSearch = appState.globalSearchTerm === nextSearchTerm && appState.viewMode === 'search';
+    if (isSameSearch) return;
+
+    appState.globalSearchTerm = nextSearchTerm;
+    appState.viewMode = nextSearchTerm ? 'search' : 'today';
+    appState.activeProject = null;
+    renderAll(appState);
+}
+
 export function initializeEventListeners() {
 
     domElements.projectDescription.addEventListener('click', (e) => {
@@ -150,25 +179,13 @@ export function initializeEventListeners() {
     });
 
     domElements.globalSearch.addEventListener("input", debounce((e) => {
-        const searchTerm = e.target.value.trim();
-
-        if (searchTerm) {
-            appState.globalSearchTerm = searchTerm;
-            appState.viewMode = "search";
-            appState.activeProject = null;
-            renderAll(appState);
-        } else if (appState.viewMode === "search") {
-            appState.viewMode = "today";
-            appState.globalSearchTerm = "";
-            renderAll(appState);
-        }
+        setGlobalSearchTerm(e.target.value);
     }, 300));
 
     domElements.globalSearch.addEventListener("focus", () => {
-        if (domElements.globalSearch.value.trim()) {
-            appState.viewMode = "search";
-            appState.globalSearchTerm = domElements.globalSearch.value.trim();
-            renderAll(appState);
+        const activeSearch = domElements.globalSearch.value.trim();
+        if (activeSearch) {
+            setGlobalSearchTerm(activeSearch);
         }
     });
 
@@ -199,19 +216,7 @@ export function initializeEventListeners() {
                 showNotification(`Project "${project.name}" has been archived.`, "warning");
             }
         } else {
-            const newActiveProject = appState.projects.find(p => p.id === projectId);
-            if (newActiveProject) {
-                appState.activeProject = newActiveProject;
-                appState.viewMode = "project";
-                if (window.innerWidth <= 768) {
-                    toggleSidebar();
-                    setTimeout(() => {
-                        renderAll(appState);
-                    }, 50);
-                } else {
-                    renderAll(appState);
-                }
-            }
+            setProjectView(projectId);
         }
     });
 
@@ -384,6 +389,8 @@ export function initializeEventListeners() {
         if (!navItem) return;
 
         const category = navItem.dataset.category;
+        if (appState.viewMode === category && !appState.activeProject) return;
+
         appState.viewMode = category;
         appState.activeProject = null;
         renderAll(appState);
